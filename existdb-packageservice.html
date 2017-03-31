@@ -1,0 +1,73 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="existdb-package-descriptor.html">
+
+<!--
+`existdb-packageservice`
+
+@demo demo/index.html
+-->
+
+<dom-module id="existdb-packageservice">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <iron-ajax id="loadInstalled"
+                   verbose with-credentials
+                   method="get" handle-as="text"
+                   on-response="handlePackages"
+                   url="/exist/apps/existdb-packageservice/packages/?type=local&format=manager"
+                   on-error="handlePackagesError" auto></iron-ajax>
+
+        <h2>Hello [[prop1]]</h2>
+        <slot></slot>
+    </template>
+
+    <script>
+        class ExistdbPackageservice extends Polymer.Element {
+
+            static get is() {
+                return 'existdb-packageservice';
+            }
+
+            static get properties() {
+                return {
+                    prop1: {
+                        type: String,
+                        value: 'existdb-packageservice'
+                    }
+                };
+            }
+
+            constructor() {
+                console.log('ExistdbPackageservice constructor')
+                super();
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+                console.log('ExistdbPackageservice connected')
+            }
+
+            handlePackages(){
+                this.innerHTML = this.$.loadInstalled.lastResponse
+
+            }
+
+            handlePackagesError(){
+//                console.log('ExistdbPackageservice._handlePackagesError ', this.$.loadInstalled.lastError)
+                console.log('ExistdbPackageservice._handlePackagesError ')
+
+            }
+
+
+        }
+
+        window.customElements.define(ExistdbPackageservice.is, ExistdbPackageservice);
+    </script>
+</dom-module>
