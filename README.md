@@ -1,38 +1,43 @@
-# \<existdb-package-descriptor\>
+# eXistdb Package Service
 
+Exposes endpoints to read local and remote packages.
 
-
-## Install the Polymer-CLI
-
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
-
-## Viewing Your Application
+## Endpoint for local apps
 
 ```
-$ polymer serve
+/exstdb-packageservice/packages/local
 ```
 
-## Building Your Application
+will return a list of locally installed packages if the 
+current user has at least a 'view-packages' permission.
 
-```
-$ polymer build
-```
+Access to certain functions are granted on behalf of the eXistdb
+user groups that the user is member of.
 
-This will create a `build/` folder with `bundled/` and `unbundled/` sub-folders
-containing a bundled (Vulcanized) and unbundled builds, both run through HTML,
-CSS, and JS optimizers.
+The service is intended to be used by other front-end applications like
+package-manager and dashboard.
 
-You can serve the built versions by giving `polymer serve` a folder to serve
-from:
+There are 
 
-```
-$ polymer serve build/bundled
-```
+## Authorization
 
-## Running Tests
+Permissions are configured in configuration.xml.
 
-```
-$ polymer test
-```
+There are 3 possible roles for Package Service as described below.
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+### Package Admin
+
+* may see all package details
+* may add packages
+* may remove packages
+
+### Package Manager 
+
+* may see all package details
+
+### Package User
+
+* may see packages with short info
+
+
+
