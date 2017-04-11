@@ -4,8 +4,11 @@
     <authorization>
         <!-- section for definition of user groups and their accesslevel -->
         <group name="admin" access-level="50"/>
+        <!-- package-admin may install/remove packages -->
         <group name="package-admin" access-level="40"/>
+        <!-- package manager may see details for all packages -->
         <group name="package-manager" access-level="30"/>
+        <!-- package user may be used to introduce a level above 'guest' -->
         <group name="package-user" access-level="10"/>
         <group name="guest" access-level="10"/>
 
@@ -14,9 +17,6 @@
         <action name="install-package" required-level="40"/>
         <action name="remove-package" required-level="40"/>
         <action name="view-package-details" required-level="30"/>
-
         <action name="view-packages" required-level="10"/>
     </authorization>
-
-<!--    <repository>http://localhost:8080/exist/apps/public-repo</repository>-->
 </settings>

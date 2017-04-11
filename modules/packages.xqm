@@ -55,6 +55,22 @@ declare function packages:get-local-packages(){
         )
 };
 
+declare function packages:get-remote-packages(){
+    let $access-level := packages:get-user-access-level()
+    let $install-level := xs:integer($config:INSTALL-PACKAGE-PERMISSION)
+
+    let $apps := packages:public-repo-contents(packages:installed-apps())
+    return
+        if ( $access-level >= $install-level) then
+            for $app in $apps
+            order by upper-case($app/title/text())
+            return
+                packages:display($config:REPO, $app, $access-level)
+        else
+           <no-packages>You do not have sufficient priviledges to access packages</no-packages>
+
+};
+
 
 declare %private function packages:get-user-access-level()  {
     let $groups := " " || string-join(xmldb:get-user-groups(xmldb:get-current-user()), " ") || " "
@@ -213,10 +229,14 @@ declare %private function packages:display($repoURL as xs:anyURI?, $app as eleme
                     else ()
                 }
                 {
-                    if($hasDetailsLevel) then
-                        for $author in $app/author
+                    if ($hasDetailsLevel) then
+                        <existdb-app-authors>
+                        {
+                            for $author in $app/author
                             return
-                                <existdb-app-author>{$author/text()}</existdb-app-author>
+                            <existdb-app-author>{$author/text()}</existdb-app-author>
+                        }
+                        </existdb-app-authors>
                     else ()
                 }
                 {
@@ -232,20 +252,23 @@ declare %private function packages:display($repoURL as xs:anyURI?, $app as eleme
                 }
                 {
                     if ($hasDetailsLevel and $app/other/version) then
-                        for $version in $app/other/version
-                        return
-                            <existdb-app-version version="{$version/@version/string()}">
-                                <div class="version">{$version/@version/string()}</div>
-                                <form action="">
-                                    <input type="hidden" name="package-url" value="{$app/name}"/>
-                                    <input type="hidden" name="abbrev" value="{$app/abbrev}"/>
-                                    <input type="hidden" name="version" value="{$version/@version}"/>
-                                    <input type="hidden" name="action" value="install"/>
-                                    <input type="hidden" name="type" value="application"/>
-                                    <button class="installApp" title="Install">Install</button>
-                                </form>
-                            </existdb-app-version>
-
+                        <existdb-app-versions>
+                            {
+                                for $version in $app/other/version
+                                return
+                                    <existdb-app-version version="{$version/@version/string()}">
+                                        <div class="version">{$version/@version/string()}</div>
+                                        <form action="">
+                                            <input type="hidden" name="package-url" value="{$app/name}"/>
+                                            <input type="hidden" name="abbrev" value="{$app/abbrev}"/>
+                                            <input type="hidden" name="version" value="{$version/@version}"/>
+                                            <input type="hidden" name="action" value="install"/>
+                                            <input type="hidden" name="type" value="application"/>
+                                            <button class="installApp" title="Install">Install</button>
+                                        </form>
+                                    </existdb-app-version>
+                            }
+                        </existdb-app-versions>
                     else
                         ()
                 }

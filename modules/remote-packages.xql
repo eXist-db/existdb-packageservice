@@ -7,4 +7,6 @@ xquery version "3.0";
 : To change this template use File | Settings | File Templates.
 :)
 
-<packages></packages>
+import module namespace packages="http://exist-db.org/apps/dashboard/packages/rest" at "packages.xqm";
+
+packages:get-remote-packages()

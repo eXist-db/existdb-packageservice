@@ -57,7 +57,7 @@ else if(starts-with($exist:path,"/packages/local")) then
         <forward url="../modules/local-packages.xql">
         </forward>
     </dispatch>
-else if(starts-with($exist:path,"/remote-packages.xqm")) then
+else if(starts-with($exist:path,"/packages/remote")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="../modules/remote-packages.xql"></forward>
     </dispatch>
