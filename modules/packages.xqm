@@ -28,17 +28,22 @@ declare variable $packages:HIDE := ("dashboard");
 
     The user needs to have at least 'VIEW-PACKAGE-PERMISSION' to see the list
     otherwise just an empty <no-packages> element will be returned.
+
+    todo: is hiding of packages still needed?
+    todo: refactor display function
 :)
 declare function packages:get-local-packages(){
     let $access-level := packages:get-user-access-level()
     let $view-access-level := xs:integer($config:VIEW-PACKAGE-PERMISSION)
     let $default-apps-access-level := xs:integer($config:DEFAULT-APPS-PERMISSION)
 
-
+    (: default apps are not displayed any more :)
+(:
     let $apps := if($access-level >= $default-apps-access-level)
             then packages:default-apps() | packages:installed-apps()
             else packages:installed-apps()
-
+:)
+    let $apps :=  packages:installed-apps()
     return
         if ( $access-level >= $view-access-level) then (
             for $app in $apps
@@ -50,6 +55,7 @@ declare function packages:get-local-packages(){
         )
 };
 
+
 declare %private function packages:get-user-access-level()  {
     let $groups := " " || string-join(xmldb:get-user-groups(xmldb:get-current-user()), " ") || " "
     let $f := $config:AUTH//group[contains($groups, data(./@name))]
@@ -59,12 +65,14 @@ declare %private function packages:get-user-access-level()  {
 };
 
 
+(:
 declare %private function packages:default-apps() {
         filter(function($app as element(app))
         {
             $app
         }, $packages:DEFAULTS/app)
 };
+:)
 
 declare %private function packages:installed-apps() as element(app)* {
     packages:scan-repo(

@@ -12,7 +12,7 @@
         <title>Collections</title>
         <abbrev>browsing</abbrev>
         <version>1.0</version>
-        <icon>plugins/browsing/images/icon.png</icon>
+        <icon>resources/images/collections.png</icon>
         <url>plugin:browsing</url>
         <type>plugin</type>
     </app>
@@ -20,7 +20,7 @@
         <title>Shutdown</title>
         <abbrev>shutdown</abbrev>
         <version>1.0</version>
-        <icon>plugins/shutdown/icon.png</icon>
+        <icon>resources/images/shutdown.png</icon>
         <url>plugin:shutdown</url>
         <type>plugin</type>
     </app>
@@ -28,7 +28,7 @@
         <title>Backup</title>
         <abbrev>backup</abbrev>
         <version>1.0</version>
-        <icon>plugins/backup/images/icon.png</icon>
+        <icon>resources/images/backup.png</icon>
         <url>plugin:backup</url>
         <type>plugin</type>
     </app>
@@ -36,7 +36,7 @@
         <title>Package Manager</title>
         <abbrev>packageManager</abbrev>
         <version>1.0</version>
-        <icon>plugins/packageManager/images/packages-128.png</icon>
+        <icon>resources/images/packages-128.png</icon>
         <url>plugin:packageManager</url>
         <type>plugin</type>
     </app>
@@ -52,7 +52,7 @@
         <title>User Manager</title>
         <abbrev>userManager</abbrev>
         <version>2.0</version>
-        <icon>plugins/userManager/icon.png</icon>
+        <icon>resources/images/usermanager.png</icon>
         <url>plugin:userManager</url>
         <type>plugin</type>
     </app>

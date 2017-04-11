@@ -14,6 +14,8 @@
     <style>
       :host {
         display: block;
+        background: whitesmoke;
+        margin: 10px 0;
       }
 
       ::slotted(*){
@@ -21,11 +23,12 @@
       }
 
       ::slotted(existdb-app-title){
-        background: blue;
+      }
+
+      ::slotted(existdb-app-author)::before{
+        content: 'Author ';
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
-
     <slot></slot>
   </template>
 
