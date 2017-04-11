@@ -33,7 +33,11 @@ declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.
 declare variable $config:expath-descriptor := doc(concat($config:app-root, "/expath-pkg.xml"))/expath:package;
 declare variable $config:SETTINGS := doc($config:app-root || "/configuration.xml")/settings;
 declare variable $config:AUTH := doc($config:app-root || "/configuration.xml")/settings/authorization;
-declare variable $config:VIEW-PACKAGE-PERMISSION := doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-packages"]/@required-level;
+declare variable $config:VIEW-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-packages"]/@required-level);
+declare variable $config:DEFAULT-APPS-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-default-apps"]/@required-level);
+declare variable $config:VIEW-DETAILS-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-package-details"]/@required-level);
+declare variable $config:INSTALL-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "install-package"]/@required-level);
+declare variable $config:REMOVE-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "remove-package"]/@required-level);
 declare variable $config:REPO := xs:anyURI($config:SETTINGS/repository);
 
 (:~
