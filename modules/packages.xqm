@@ -8,7 +8,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 import module namespace functx = "http://www.functx.com";
 
 
-(:import module namespace console="http://exist-db.org/xquery/console";:)
+import module namespace console="http://exist-db.org/xquery/console";
 
 declare namespace json="http://www.json.org";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
@@ -37,6 +37,7 @@ declare variable $packages:HIDE := ("dashboard");
 :)
 declare function packages:get-local-packages(){
     let $access-level := packages:get-user-access-level()
+    let $log := console:log("access-level: " || $access-level)
     let $view-access-level := xs:integer($config:VIEW-PACKAGE-PERMISSION)
     let $default-apps-access-level := xs:integer($config:DEFAULT-APPS-PERMISSION)
 
@@ -60,6 +61,7 @@ declare function packages:get-local-packages(){
 
 declare function packages:get-remote-packages(){
     let $access-level := packages:get-user-access-level()
+    let $log := console:log("access-level: " || $access-level)
     let $install-level := xs:integer($config:INSTALL-PACKAGE-PERMISSION)
 
     let $apps := packages:public-repo-contents(packages:installed-apps())
@@ -70,7 +72,7 @@ declare function packages:get-remote-packages(){
             return
                 packages:display($config:REPO, $app, $access-level)
         else
-           <no-packages>You do not have sufficient priviledges to access packages</no-packages>
+           <no-packages>You do not have sufficient priviledges to access remote packages</no-packages>
 
 };
 

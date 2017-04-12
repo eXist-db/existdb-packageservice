@@ -26,8 +26,8 @@ else if ($exist:path = "/") then
         <redirect url="index.html"/>
     </dispatch>
 
+(:
 else if (ends-with($exist:path, ".html")) then
-    (: the html page is run through view.xql to expand templates :)
         try {
             let $loggedIn := $login("org.exist.login",  (), true())
             let $user := request:get-attribute("org.exist.login.user")
@@ -51,6 +51,7 @@ else if (ends-with($exist:path, ".html")) then
                 <fail>{$err:description}</fail>
             </response>
         }
+:)
 
 else if(starts-with($exist:path,"/packages/local")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

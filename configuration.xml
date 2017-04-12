@@ -3,7 +3,7 @@
     <repository>http://demo.exist-db.org/exist/apps/public-repo</repository>
     <authorization>
         <!-- section for definition of user groups and their accesslevel -->
-        <group name="admin" access-level="50"/>
+        <group name="dba" access-level="50"/>
         <!-- package-admin may install/remove packages -->
         <group name="package-admin" access-level="40"/>
         <!-- package manager may see details for all packages -->
