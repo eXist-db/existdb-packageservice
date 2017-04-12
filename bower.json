@@ -23,6 +23,7 @@
     "controller.xql",
     "defaults.xml",
     "existdb-packagerservice.iml",
+    "existdb-packagerservice.html",
     ".idea",
     "build",
     "bower_components",
