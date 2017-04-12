@@ -25,7 +25,6 @@ This endpoint will be used by ``èxistdb-local-packages`` web component.
 
 ```
 /exstdb-packageservice/packages/remote
-
 ```
 
 
@@ -73,6 +72,15 @@ allow or deny guest users access to packages.
 
 By giving 'guest' users a lower access-level than 'package-user' access to packages will be denied. Same
 would be achieved by completely removing the 'guest' entry in configuration.xml
+
+## Web Components
+
+existdb-packageservice also provides 2 Polymer Web Components that uses the above endpoints and can be dropped
+into your applications.
+
+These are ```<existdb-local-packages>``` and ```existdb-remote-packages```.
+
+### Installing the components
 
 
 
