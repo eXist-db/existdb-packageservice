@@ -4,8 +4,11 @@ module namespace packages="http://exist-db.org/apps/dashboard/packages/rest";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
-import module namespace console="http://exist-db.org/xquery/console";
 
+import module namespace functx = "http://www.functx.com";
+
+
+(:import module namespace console="http://exist-db.org/xquery/console";:)
 
 declare namespace json="http://www.json.org";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
@@ -75,7 +78,7 @@ declare function packages:get-remote-packages(){
 declare %private function packages:get-user-access-level()  {
     let $groups := " " || string-join(xmldb:get-user-groups(xmldb:get-current-user()), " ") || " "
     let $f := $config:AUTH//group[contains($groups, data(./@name))]
-    let $log := console:log("found: " || count($f))
+    (:let $log := console:log("found: " || count($f)):)
     let $max := max($f/@access-level)
     return $max
 };
@@ -91,6 +94,9 @@ declare %private function packages:default-apps() {
 :)
 
 declare %private function packages:installed-apps() as element(app)* {
+
+    let $path := functx:substring-before-last(request:get-uri(),'/packages')
+    return
     packages:scan-repo(
         function ($app, $expathXML, $repoXML) {
             if ($repoXML//repo:type = "application") then
@@ -127,7 +133,7 @@ declare %private function packages:installed-apps() as element(app)* {
                         <website>{$repoXML//repo:website/text()}</website>
                         <version>{$expathXML//expath:package/@version/string()}</version>
                         <license>{$repoXML//repo:license/text()}</license>
-                        <icon>{if ($icon) then 'modules/get-icon.xql?package=' || $app else 'resources/images/package.png'}</icon>
+                        <icon>{if ($icon) then $path || '/modules/get-icon.xql?package=' || $app else 'resources/images/package.png'}</icon>
                         <url>{$app-url}</url>
                         <type>{$repoXML//repo:type/text()}</type>
                     </app>

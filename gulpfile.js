@@ -86,6 +86,7 @@ gulp.task('deploy:components', function () {
 var otherPaths = [
     '*.html',
     '*.xql',
+    'demo/*',
     'templates/**/*',
     'transforms/**/*',
     'resources/**/*',

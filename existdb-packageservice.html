@@ -1,5 +1,5 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
-<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="existdb-local-packages.html">
 
 <!--<link rel="import" href="existdb-package-descriptor.html">-->
 
@@ -15,15 +15,9 @@
             :host {
                 display: block;
             }
+
         </style>
-
-        <iron-ajax id="loadInstalled"
-                   verbose with-credentials
-                   method="get" handle-as="text"
-                   on-response="handlePackages"
-                   url="/exist/apps/existdb-packageservice/packages/local"
-                   on-error="handlePackagesError" auto></iron-ajax>
-
+        <h1>This is just a dummy component</h1>
         <slot></slot>
     </template>
 
@@ -51,18 +45,19 @@
             connectedCallback() {
                 super.connectedCallback();
                 console.log('ExistdbPackageservice connected')
+//                console.log('ExistdbPackageservice connected ', this.$.packages)
+//                console.log('ExistdbPackageservice connected ', this.$.packages.get('properties'))
+
+                var self=this
+                window.addEventListener('WebComponentsReady', function(e) {
+                    console.log('WebComponentsReady ', self.$.packages)
+                    console.log('WebComponentsReady ', self.$.packages.getPackages())
+//                    self.innerHTML = self.$.packages.textContent
+                });
+
             }
 
-            handlePackages(){
-                this.innerHTML = this.$.loadInstalled.lastResponse
 
-            }
-
-            handlePackagesError(){
-//                console.log('ExistdbPackageservice._handlePackagesError ', this.$.loadInstalled.lastError)
-                console.log('ExistdbPackageservice._handlePackagesError ')
-
-            }
 
         }
 
