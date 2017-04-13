@@ -135,7 +135,7 @@ declare %private function packages:installed-apps() as element(app)* {
                         <website>{$repoXML//repo:website/text()}</website>
                         <version>{$expathXML//expath:package/@version/string()}</version>
                         <license>{$repoXML//repo:license/text()}</license>
-                        <icon>{if ($icon) then $path || '/modules/get-icon.xql?package=' || $app else 'resources/images/package.png'}</icon>
+                        <icon>{if ($icon) then $path || '/modules/get-icon.xql?package=' || $app else $path || '/resources/images/package.png'}</icon>
                         <url>{$app-url}</url>
                         <type>{$repoXML//repo:type/text()}</type>
                     </app>
