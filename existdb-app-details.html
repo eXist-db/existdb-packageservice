@@ -1,0 +1,47 @@
+<!--
+`existdb-package-descriptor`
+
+@demo demo/index.html
+-->
+
+
+<dom-module id="existdb-app-details">
+    <template>
+        <style>
+            :host {
+                display: block;
+                background: whitesmoke;
+                margin: 10px 0;
+            }
+        </style>
+
+
+        <slot></slot>
+
+    </template>
+
+    <script>
+        class ExistdbAppDetails extends Polymer.Element {
+            static get is() {
+                return 'existdb-app-details';
+            }
+
+            static get properties() {
+                return {
+                    prop1: {
+                        type: String,
+                        value: 'existdb-app-details'
+                    }
+                };
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+                console.log('ExistdbAppDetails connected')
+            }
+
+        }
+
+        window.customElements.define(ExistdbAppDetails.is, ExistdbAppDetails);
+    </script>
+</dom-module>

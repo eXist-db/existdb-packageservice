@@ -175,13 +175,13 @@ declare %private function packages:display($repoURL as xs:anyURI?, $app as eleme
         let $status := if ($app/@status = 'installed') then 'installed' else 'notInstalled'
 
         return
-            <existdb-package-descriptor tabindex="0" data-name="{$app/name/string()}" status="{$status}" type="{$app/type}" installed="{$installed}" available="{$available}" abbrev="{$app/abbrev}" short-title="{$app/title/text()}">
+            <existdb-package-descriptor tabindex="0" url="{$url}" data-name="{$app/name/string()}" status="{$status}" type="{$app/type}" installed="{$installed}" available="{$available}" abbrev="{$app/abbrev}" short-title="{$app/title/text()}">
                 { if ($hasNewer) then attribute data-update { "true" } else () }
 
                 {
                     if ($app/@status = "installed" and $app/type = 'application') then
                         <existdb-app-icon>
-                            <a href="{$url}" target="_blank" title="click to open application"><img class="appIcon" src="{$icon}"/></a>
+                            <a href="{$url}" target="_blank" title="click to open application" tabindex="-1"><img class="appIcon" src="{$icon}"/></a>
                         </existdb-app-icon>
                     else
                         <existdb-app-icon>
@@ -209,6 +209,87 @@ declare %private function packages:display($repoURL as xs:anyURI?, $app as eleme
                     else
                         <existdb-app-version>Version: {$app/version/text()}</existdb-app-version>
                 }
+                <existdb-app-actions class="appFunctions">
+                    {
+
+                        if ($app/@status = "installed" and $access-level >= $install-package-level) then
+                            <existdb-package-remove-action url="{$app/@path}" abbrev="{$app/abbrev}" type="application"></existdb-package-remove-action>
+                        else (),
+
+                        if ($access-level >= $remove-package-level) then
+                            <existdb-package-install-action url="{$app/name}" abbrev="{$app/abbrev}" type="application" version="{$app/version}"></existdb-package-install-action>
+                        else ()
+                    }
+                </existdb-app-actions>
+
+            </existdb-package-descriptor>
+};
+
+declare %private function packages:display-full($repoURL as xs:anyURI?, $app as element(app), $access-level as xs:integer) {
+    let $view-details-level := xs:integer($config:VIEW-DETAILS-PERMISSION)
+    let $install-package-level := xs:integer($config:INSTALL-PACKAGE-PERMISSION)
+    let $remove-package-level := xs:integer($config:REMOVE-PACKAGE-PERMISSION)
+    let $hasDetailsLevel := if($access-level >= $view-details-level) then true() else false()
+
+    let $icon :=
+        if ($app/icon) then
+            if ($app/@status) then
+                $app/icon[1]
+            else
+                $repoURL || "/public/" || $app/icon[1]
+        else
+            "resources/images/package.png"
+    let $url :=
+        if ($app/url) then
+            $app/url
+        else
+            $app/@path
+    return
+        let $installed := $app/@installed/string()
+        let $available := $app/@available/string()
+        let $hasNewer :=
+            if ($app/@available) then
+                packages:is-newer($available, $installed)
+            else
+                false()
+        let $status := if ($app/@status = 'installed') then 'installed' else 'notInstalled'
+
+        return
+            <existdb-package-descriptor tabindex="0" data-name="{$app/name/string()}" status="{$status}" type="{$app/type}" installed="{$installed}" available="{$available}" abbrev="{$app/abbrev}" short-title="{$app/title/text()}">
+                { if ($hasNewer) then attribute data-update { "true" } else () }
+
+                {
+                    if ($app/@status = "installed" and $app/type = 'application') then
+                        <existdb-app-icon>
+                            <a href="{$url}" target="_blank" title="click to open application" tabindex="-1"><img class="appIcon" src="{$icon}"/></a>
+                        </existdb-app-icon>
+                    else
+                        <existdb-app-icon>
+                            <img class="appIcon" src="{$icon}"/>
+                        </existdb-app-icon>
+                }
+                <existdb-app-title>{$app/title/text()}</existdb-app-title>
+                {
+                    if ($hasDetailsLevel and $app/@available) then
+                        if ($hasNewer) then (
+
+                            <existdb-app-update installed="{$installed}" available="{$available}">
+                                {
+                                    if ($app/changelog/change[@version = $available]) then
+                                        <a href="#" class="show-changes" data-version="{$available}">Changes</a>
+                                    else
+                                        ()
+                                }
+                            </existdb-app-update>,
+                            <existdb-app-changes>
+                                {$app/changelog/change[@version = $available]/node()}
+                            </existdb-app-changes>
+                        ) else
+                            ()
+                    else
+                        <existdb-app-version>Version: {$app/version/text()}</existdb-app-version>
+                }
+                <existdb-app-details>
                 {
                     if ($hasDetailsLevel and $app/@size) then
                         <existdb-app-size>{$app/@size idiv 1024}k</existdb-app-size>
@@ -223,7 +304,6 @@ declare %private function packages:display($repoURL as xs:anyURI?, $app as eleme
                 }
                 {
                     if ($hasDetailsLevel and $app/note) then
-                    (: Installation notes are shown if user clicks on install :)
                         <existdb-app-note class="installation-note" style="display: none">{$app/note/node()}</existdb-app-note>
                     else
                         ()
@@ -280,6 +360,7 @@ declare %private function packages:display($repoURL as xs:anyURI?, $app as eleme
                     else
                         ()
                 }
+                </existdb-app-details>
                 <existdb-app-actions class="appFunctions">
                     {
 
