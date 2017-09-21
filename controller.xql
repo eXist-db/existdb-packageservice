@@ -35,7 +35,7 @@ else if (ends-with($exist:path, ".html")) then
                 if ($user and sm:is-dba($user)) then (
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         {$user}
-                        <cache-control cache="yes"/>
+                        <cache-control cache="no"/>
                     </dispatch>
                 )
                 else (
@@ -55,8 +55,7 @@ else if (ends-with($exist:path, ".html")) then
 
 else if(starts-with($exist:path,"/packages/local")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="../modules/local-packages.xql">
-        </forward>
+        <forward url="../modules/local-packages.xql"></forward>
     </dispatch>
 else if(starts-with($exist:path,"/packages/remote")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

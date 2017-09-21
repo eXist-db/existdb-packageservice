@@ -26,34 +26,45 @@ declare variable $packages:DEFAULTS := doc($config:app-root || "/defaults.xml")/
 
 declare variable $packages:HIDE := ("dashboard");
 
+
 (:~
     returns a list of <existdb-package-descriptor> elements.
 
     The user needs to have at least 'VIEW-PACKAGE-PERMISSION' to see the list
     otherwise just an empty <no-packages> element will be returned.
 
+    Further the user needs to have access rights for the given app collection.
+
     todo: is hiding of packages still needed?
     todo: refactor display function
 :)
 declare function packages:get-local-packages(){
     let $access-level := packages:get-user-access-level()
-    let $log := console:log("access-level: " || $access-level)
+
+(:
+    let $log := util:log("info", "user: " || xmldb:get-current-user())
+    let $log := util:log("info", "access-level: " || $access-level)
+:)
+
     let $view-access-level := xs:integer($config:VIEW-PACKAGE-PERMISSION)
     let $default-apps-access-level := xs:integer($config:DEFAULT-APPS-PERMISSION)
 
-    (: default apps are not displayed any more :)
-(:
-    let $apps := if($access-level >= $default-apps-access-level)
-            then packages:default-apps() | packages:installed-apps()
-            else packages:installed-apps()
-:)
     let $apps :=  packages:installed-apps()
     return
         if ( $access-level >= $view-access-level) then (
             for $app in $apps
+            let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
+
+(:
+            let $log := util:log("info", "app url " || data($app/url))
+            let $log := util:log("info", "db url " || $db-path)
+            let $log := util:log("info", "app access " || sm:has-access(xs:anyURI($db-path),"r-x"))
+:)
             order by upper-case($app/title/text())
             return
-                packages:display($config:REPO, $app, $access-level)
+                if(sm:has-access(xs:anyURI($db-path),"r-x")) then
+                    packages:display($config:REPO, $app, $access-level)
+                else ()
         ) else (
             <no-packages>You do not have sufficient priviledges to view packages</no-packages>
         )
