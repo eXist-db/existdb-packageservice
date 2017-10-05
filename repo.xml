@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
     <description>existdb-packageservice</description>
-    <author/>
+    <author>Joern Turner</author>
     <website/>
-    <status>alpha</status>
+    <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
-    <type>application</type>
+    <type>library</type>
     <target>existdb-packageservice</target>
     <prepare></prepare>
     <finish/>
