@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace packages="http://exist-db.org/apps/dashboard/packages/rest";
+module namespace packages="http://exist-db.org/apps/dashboard/packages";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
@@ -21,11 +21,14 @@ declare namespace http="http://expath.org/ns/http-client";
 declare option output:method "html5";
 declare option output:media-type "text/html";
 
+declare variable $packages:configuration := doc($config:app-root || "/configuration.xml");
+
+
+
+
 
 declare variable $packages:DEFAULTS := doc($config:app-root || "/defaults.xml")/apps;
-
 declare variable $packages:ADMINAPPS := ["dashboard","backup"];
-
 declare variable $packages:HIDE := ("dashboard");
 
 
@@ -49,6 +52,32 @@ declare function packages:get-local-applications(){
  :)
 declare function packages:get-local-libraries(){
     packages:get-local("library")
+};
+
+declare function packages:get-remote-packages(){
+
+    let $apps := packages:public-repo-contents(packages:installed-apps("application"))
+    let $allowed-apps :=
+        for $app in $apps
+            let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
+
+            order by upper-case($app/title/text())
+            return
+                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then
+                     $app
+                 else ()
+
+    return
+        if($allowed-apps) then(
+            $allowed-apps
+        )
+        else (
+            <no-packages>You do not have sufficient priviledges to view packages</no-packages>
+        )
+};
+
+declare function packages:get-repo-locations(){
+    data($packages:configuration//repository)
 };
 
 declare %private function packages:get-local($type as xs:string){
@@ -79,27 +108,6 @@ declare %private function packages:get-local($type as xs:string){
         )
 };
 
-declare function packages:get-remote-packages(){
-
-    let $apps := packages:public-repo-contents(packages:installed-apps("application"))
-    let $allowed-apps :=
-        for $app in $apps
-            let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
-
-            order by upper-case($app/title/text())
-            return
-                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then
-                     $app
-                 else ()
-
-    return
-        if($allowed-apps) then(
-            $allowed-apps
-        )
-        else (
-            <no-packages>You do not have sufficient priviledges to view packages</no-packages>
-        )
-};
 
 declare %private function packages:installed-apps($type as xs:string) as element(app)* {
 
