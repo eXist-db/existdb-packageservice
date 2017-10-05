@@ -10,4 +10,6 @@
     <target>existdb-packageservice</target>
     <prepare></prepare>
     <finish/>
+    <!--todo: what does the password actually mean here? What is it used for? -->
+    <permissions xmlns:repo="http://exist-db.org/xquery/repo" password="packageservice" user="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 </meta>

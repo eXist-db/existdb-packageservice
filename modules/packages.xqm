@@ -24,7 +24,90 @@ declare option output:media-type "text/html";
 
 declare variable $packages:DEFAULTS := doc($config:app-root || "/defaults.xml")/apps;
 
+declare variable $packages:ADMINAPPS := ["dashboard","backup"];
+
 declare variable $packages:HIDE := ("dashboard");
+
+declare function packages:get-local-packages-raw(){
+    let $log := util:log("info", "user: " || xmldb:get-current-user())
+
+    let $apps :=  packages:installed-apps()
+    let $allowed-apps :=
+         for $app in $apps
+             let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
+
+             let $log := util:log("info", "app url " || data($app/url))
+             let $log := util:log("info", "db url " || $db-path)
+             let $log := util:log("info", "app access " || sm:has-access(xs:anyURI($db-path),"r-x"))
+             let $groups := sm:get-user-groups(xmldb:get-current-user())
+
+             order by upper-case($app/title/text())
+             return
+                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then
+                     $app
+                 else ()
+
+    return
+        if($allowed-apps) then(
+            $allowed-apps
+        )
+        else (
+            <no-packages>You do not have sufficient priviledges to view packages</no-packages>
+        )
+};
+
+declare function packages:get-remote-packages-raw(){
+
+    let $apps := packages:public-repo-contents(packages:installed-apps())
+    let $allowed-apps :=
+        for $app in $apps
+            let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
+
+            order by upper-case($app/title/text())
+            return
+                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then
+                     $app
+                 else ()
+
+    return
+        if($allowed-apps) then(
+            $allowed-apps
+        )
+        else (
+            <no-packages>You do not have sufficient priviledges to view packages</no-packages>
+        )
+};
+
+
+
+(: todo: filter admin apps (must have group dba) from the list - these are displayed in the sidebar :)
+declare function packages:get-local-packages(){
+    let $log := util:log("info", "user: " || xmldb:get-current-user())
+
+    let $apps :=  packages:installed-apps()
+    let $allowed-apps :=
+         for $app in $apps
+             let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
+
+             let $log := util:log("info", "app url " || data($app/url))
+             let $log := util:log("info", "db url " || $db-path)
+             let $log := util:log("info", "app access " || sm:has-access(xs:anyURI($db-path),"r-x"))
+             let $groups := sm:get-user-groups(xmldb:get-current-user())
+
+             order by upper-case($app/title/text())
+             return
+                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then
+                     packages:display($config:REPO, $app, xs:integer(50))
+                 else ()
+
+    return
+        if($allowed-apps) then(
+            $allowed-apps
+        )
+        else (
+            <no-packages>You do not have sufficient priviledges to view packages</no-packages>
+        )
+};
 
 
 (:~
@@ -38,7 +121,7 @@ declare variable $packages:HIDE := ("dashboard");
     todo: is hiding of packages still needed?
     todo: refactor display function
 :)
-declare function packages:get-local-packages(){
+declare function packages:get-local-packages-orig(){
     let $access-level := packages:get-user-access-level()
 
 (:
@@ -51,6 +134,7 @@ declare function packages:get-local-packages(){
 
     let $apps :=  packages:installed-apps()
     return
+
         if ( $access-level >= $view-access-level) then (
             for $app in $apps
             let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
