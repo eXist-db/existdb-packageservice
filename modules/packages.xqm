@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace packages="http://exist-db.org/apps/dashboard/packages";
+module namespace packages="http://exist-db.org/apps/existdb-packages";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
@@ -80,7 +80,8 @@ declare function packages:get-repo-locations(){
     data($packages:configuration//repository)
 };
 
-declare %private function packages:get-local($type as xs:string){
+(: should be private but there seems to be a bug :)
+declare function packages:get-local($type as xs:string){
     let $log := util:log("info", "user: " || xmldb:get-current-user())
 
     let $apps :=  packages:installed-apps($type)
@@ -109,7 +110,8 @@ declare %private function packages:get-local($type as xs:string){
 };
 
 
-declare %private function packages:installed-apps($type as xs:string) as element(app)* {
+(: should be private but there seems to be a bug :)
+declare function packages:installed-apps($type as xs:string) as element(app)* {
 
     let $path := functx:substring-before-last(request:get-uri(),'/packages')
     return
@@ -161,8 +163,8 @@ declare %private function packages:installed-apps($type as xs:string) as element
 
 
 
-
-declare %private function packages:scan-repo($callback as function(xs:string, element(), element()?) as item()*) {
+(: should be private but there seems to be a bug :)
+declare function packages:scan-repo($callback as function(xs:string, element(), element()?) as item()*) {
     for $app in repo:list()
     let $expathMeta := packages:get-package-meta($app, "expath-pkg.xml")
     let $repoMeta := packages:get-package-meta($app, "repo.xml")
@@ -170,7 +172,8 @@ declare %private function packages:scan-repo($callback as function(xs:string, el
         $callback($app, $expathMeta, $repoMeta)
 };
 
-declare %private function packages:get-package-meta($app as xs:string, $name as xs:string) {
+(: should be private but there seems to be a bug :)
+declare function packages:get-package-meta($app as xs:string, $name as xs:string) {
     let $data :=
         let $meta := repo:get-resource($app, $name)
         return
@@ -188,7 +191,8 @@ declare %private function packages:get-package-meta($app as xs:string, $name as 
             ()
 };
 
-declare %private function packages:public-repo-contents($installed as element(app)*) {
+(: should be private but there seems to be a bug :)
+declare function packages:public-repo-contents($installed as element(app)*) {
     try {
         let $url := $config:REPO || "/public/apps.xml?version=" || packages:get-version() ||
             "&amp;source=" || util:system-property("product-source")
@@ -224,11 +228,13 @@ declare %private function packages:public-repo-contents($installed as element(ap
     }
 };
 
-declare %private function packages:get-version() {
+(: should be private but there seems to be a bug :)
+declare function packages:get-version() {
     (util:system-property("product-semver"), util:system-property("product-version"))[1]
 };
 
-declare %private function packages:required-version($required as element(requires)) {
+(: should be private but there seems to be a bug :)
+declare function packages:required-version($required as element(requires)) {
     string-join((
         if ($required/@semver-min) then
             " > " || $required/@semver-min
@@ -245,14 +251,16 @@ declare %private function packages:required-version($required as element(require
     ))
 };
 
-declare %private function packages:is-newer($available as xs:string, $installed as xs:string) as xs:boolean {
+(: should be private but there seems to be a bug :)
+declare function packages:is-newer($available as xs:string, $installed as xs:string) as xs:boolean {
     let $verInstalled := tokenize($installed, "\.")
     let $verAvailable := tokenize($available, "\.")
     return
         packages:compare-versions($verInstalled, $verAvailable)
 };
 
-declare %private function packages:compare-versions($installed as xs:string*, $available as xs:string*) as xs:boolean {
+(: should be private but there seems to be a bug :)
+declare function packages:compare-versions($installed as xs:string*, $available as xs:string*) as xs:boolean {
     if (empty($installed)) then
         exists($available)
     else if (empty($available)) then

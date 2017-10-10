@@ -5,8 +5,6 @@ declare namespace control="http://exist-db.org/apps/dashboard/controller";
 
 import module namespace login-helper="http://exist-db.org/apps/dashboard/login-helper" at "modules/login-helper.xql";
 
-import module namespace packages="http://exist-db.org/apps/dashboard/packages/rest" at "modules/packages.xqm";
-
 declare variable $exist:path external;
 declare variable $exist:resource external;
 declare variable $exist:controller external;

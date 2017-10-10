@@ -1,34 +1,11 @@
 # eXistdb Package Service
 
+The packager service bundles some common functions to access package repositories.
+
+See modules/packages.xqm for details
 
 
-Exposes endpoints to read local and remote packages.
-
-The service is intended to be used by front-end applications like
-package-manager and dashboard.
-
-Access to certain functions is granted on behalf of the eXistdb
-user groups that the user is member of. See section 'Authorization'.
-
-This approach was taken to expose just the information that a certain user is allowed to access.
-
-## Endpoint for local apps
-
-```
-/exstdb-packageservice/packages/local
-```
-
-will return a list of locally installed packages if the 
-current user has at least a 'view-packages' permission.
-
-This endpoint will be used by ``èxistdb-local-packages`` web component.
-
-## Endpoint for remote apps
-
-```
-/exstdb-packageservice/packages/remote
-```
-
+todo: The following still needs another review
 
 ## Authorization
 
@@ -75,14 +52,6 @@ allow or deny guest users access to packages.
 By giving 'guest' users a lower access-level than 'package-user' access to packages will be denied. Same
 would be achieved by completely removing the 'guest' entry in configuration.xml
 
-## Web Components
-
-existdb-packageservice also provides 2 Polymer Web Components that uses the above endpoints and can be dropped
-into your applications.
-
-These are ```<existdb-local-packages>``` and ```existdb-remote-packages```.
-
-### Installing the components
 
 
 
