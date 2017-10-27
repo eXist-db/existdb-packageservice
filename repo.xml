@@ -6,10 +6,10 @@
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
-    <type>library</type>
+    <type>application</type>
     <target>existdb-packageservice</target>
     <prepare></prepare>
     <finish/>
     <!--todo: what does the password actually mean here? What is it used for? -->
-    <permissions xmlns:repo="http://exist-db.org/xquery/repo" password="packageservice" user="packageservice" group="packageservice" mode="rwxrwxr-x"/>
+    <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 </meta>

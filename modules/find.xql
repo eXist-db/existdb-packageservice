@@ -1,5 +1,6 @@
 xquery version "3.0";
 
+
 import module namespace app="http://exist-db.org/xquery/app" at "app.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace scanrepo="http://exist-db.org/xquery/admin/scanrepo" at "scan.xql";
@@ -12,6 +13,7 @@ let $maxVersion := request:get-parameter("semver-max", ())
 let $version := request:get-parameter("version", ())
 let $zip := request:get-parameter("zip", ())
 let $procVersion := request:get-parameter("processor", "2.2.0")
+
 let $apps :=
     if ($name) then
         collection($config:app-root || "/public")//app[name = $name]

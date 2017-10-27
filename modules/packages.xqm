@@ -3,12 +3,7 @@ xquery version "3.0";
 module namespace packages="http://exist-db.org/apps/existdb-packages";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-
-
 import module namespace functx = "http://www.functx.com";
-
-
-import module namespace console="http://exist-db.org/xquery/console";
 
 declare namespace json="http://www.json.org";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
@@ -22,10 +17,6 @@ declare option output:method "html5";
 declare option output:media-type "text/html";
 
 declare variable $packages:configuration := doc($config:app-root || "/configuration.xml");
-
-
-
-
 
 declare variable $packages:DEFAULTS := doc($config:app-root || "/defaults.xml")/apps;
 declare variable $packages:ADMINAPPS := ["dashboard","backup"];
@@ -87,6 +78,7 @@ declare function packages:get-local($type as xs:string){
     let $apps :=  packages:installed-apps($type)
     let $allowed-apps :=
          for $app in $apps
+         (: todo: this path matching is hardly good enough i guess - how to do better? :)
              let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
 
              let $log := util:log("info", "app url " || data($app/url))
@@ -96,7 +88,7 @@ declare function packages:get-local($type as xs:string){
 
              order by upper-case($app/title/text())
              return
-                 if(sm:has-access(xs:anyURI($db-path),"rwx")) then
+                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then
                      $app
                  else ()
 
@@ -113,7 +105,7 @@ declare function packages:get-local($type as xs:string){
 (: should be private but there seems to be a bug :)
 declare function packages:installed-apps($type as xs:string) as element(app)* {
 
-    let $path := functx:substring-before-last(request:get-uri(),'/packages')
+    let $path := functx:substring-before-last(request:get-uri(),'/existdb-packages')
     return
     packages:scan-repo(
         function ($app, $expathXML, $repoXML) {

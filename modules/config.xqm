@@ -6,8 +6,6 @@ xquery version "3.0";
  :)
 module namespace config="http://exist-db.org/xquery/apps/config";
 
-import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
-
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 
@@ -32,12 +30,14 @@ declare variable $config:app-root :=
 declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.xml"))/repo:meta;
 declare variable $config:expath-descriptor := doc(concat($config:app-root, "/expath-pkg.xml"))/expath:package;
 declare variable $config:SETTINGS := doc($config:app-root || "/configuration.xml")/settings;
+(:
 declare variable $config:AUTH := doc($config:app-root || "/configuration.xml")/settings/authorization;
 declare variable $config:VIEW-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-packages"]/@required-level);
 declare variable $config:DEFAULT-APPS-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-default-apps"]/@required-level);
 declare variable $config:VIEW-DETAILS-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-package-details"]/@required-level);
 declare variable $config:INSTALL-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "install-package"]/@required-level);
 declare variable $config:REMOVE-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "remove-package"]/@required-level);
+:)
 declare variable $config:REPO := xs:anyURI($config:SETTINGS/repository);
 
 (:~
@@ -63,10 +63,6 @@ declare function config:repo-descriptor() as element(repo:meta) {
  :)
 declare function config:expath-descriptor() as element(expath:package) {
     $config:expath-descriptor
-};
-
-declare %templates:wrap function config:app-title($node as node(), $model as map(*)) as text() {
-    $config:expath-descriptor/expath:title/text()
 };
 
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {
