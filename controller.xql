@@ -54,6 +54,6 @@ else if(starts-with($exist:path,"/packages/remote")) then
             response:set-status-code(403)
         }
 else
-    <response>
+    <repo-response>
         <fail>no service</fail>
-    </response>
+    </repo-response>

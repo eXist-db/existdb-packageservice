@@ -178,7 +178,7 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                             else ()
                         }
                         <repo-icon>{
-                            if ($icon) then $path || '/modules/get-icon.xql?package=' || $app
+                            if ($icon) then $path || '/exist/apps/existdb-packageservice/modules/get-icon.xql?package=' || $app
                             else $path || '/resources/images/package.png'}
                         </repo-icon>
                         {
