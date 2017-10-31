@@ -128,8 +128,13 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                             )
                     else
                         ()
+
+                let $src :=
+                  if ($icon) then $path || '/existdb-packageservice/package/icon?package=' || $app
+                  else $path || '/resources/images/package.png'
+
                 return
-                    <repo-app status="installed" path="{$expathXML//@name}">
+                    <repo-app status="installed" path="{$expathXML//@name}" url="{$app-url}">
                         {
                             if (string-length($expathXML//expath:title/text()) != 0) then
                                 <repo-title>{$expathXML//expath:title/text()}</repo-title>
@@ -177,10 +182,7 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                                 <repo-license>{$repoXML//repo:license/text()}</repo-license>
                             else ()
                         }
-                        <repo-icon>{
-                            if ($icon) then $path || '/exist/apps/existdb-packageservice/modules/get-icon.xql?package=' || $app
-                            else $path || '/resources/images/package.png'}
-                        </repo-icon>
+                        <repo-icon src="{$src}">&#160;</repo-icon>
                         {
                             if (string-length($app-url) != 0) then
                             <repo-url>{$app-url}</repo-url>

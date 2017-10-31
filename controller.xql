@@ -53,6 +53,14 @@ else if(starts-with($exist:path,"/packages/remote")) then
         } catch * {
             response:set-status-code(403)
         }
+else if(starts-with($exist:path,"/package/icon")) then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/modules/get-icon.xql"></forward>
+        </dispatch>
+else if(starts-with($exist:path, "/resources")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <cache-control cache="yes"/>
+    </dispatch>
 else
     <repo-response>
         <fail>no service</fail>
