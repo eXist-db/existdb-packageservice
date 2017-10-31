@@ -22,7 +22,6 @@ declare variable $packages:DEFAULTS := doc($config:app-root || "/defaults.xml")/
 declare variable $packages:ADMINAPPS := ["dashboard","backup"];
 declare variable $packages:HIDE := ("dashboard");
 
-
 (:~
  : fetch the complete list of locally installed applications and libaries
  :)
@@ -130,23 +129,66 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                     else
                         ()
                 return
-                    <app status="installed" path="{$expathXML//@name}">
-                        <title>{$expathXML//expath:title/text()}</title>
-                        <name>{$expathXML//@name/string()}</name>
-                        <description>{$repoXML//repo:description/text()}</description>
+                    <repo-app status="installed" path="{$expathXML//@name}">
+                        {
+                            if (string-length($expathXML//expath:title/text()) != 0) then
+                                <repo-title>{$expathXML//expath:title/text()}</repo-title>
+                            else
+                                <repo-title>unknown title</repo-title>
+
+                        }
+                        {
+                            if(string-length($expathXML//@name/string()) != 0) then
+                                <repo-name>{$expathXML//@name/string()}</repo-name>
+                            else
+                                <repo-name>unknown name</repo-name>
+                        }
+                        {
+                            if(string-length($repoXML//repo:description/text()) != 0) then
+                                <repo-description>{$repoXML//repo:description/text()}</repo-description>
+                            else ()
+                        }
                         {
                             for $author in $repoXML//repo:author
+                            let $author := if (string-length($author/text()) != 0) then
+                                <repo-author>{$author/text()}</repo-author>
+                            else ()
                             return
-                                <author>{$author/text()}</author>
+                                $author
                         }
-                        <abbrev>{$expathXML//@abbrev/string()}</abbrev>
-                        <website>{$repoXML//repo:website/text()}</website>
-                        <version>{$expathXML//expath:package/@version/string()}</version>
-                        <license>{$repoXML//repo:license/text()}</license>
-                        <icon>{if ($icon) then $path || '/modules/get-icon.xql?package=' || $app else $path || '/resources/images/package.png'}</icon>
-                        <url>{$app-url}</url>
-                        <type>{$repoXML//repo:type/text()}</type>
-                    </app>
+                        {
+                            if(string-length($expathXML//@abbrev/string()) != 0) then
+                                <repo-abbrev>{$expathXML//@abbrev/string()}</repo-abbrev>
+                            else ()
+                        }
+                        {
+                        if(string-length($repoXML//repo:website/text()) != 0) then
+                            <repo-website>{$repoXML//repo:website/text()}</repo-website>
+                        else ()
+                        }
+                        {
+                            if(string-length($expathXML//expath:package/@version/string()) != 0) then
+                                <repo-version>{$expathXML//expath:package/@version/string()}</repo-version>
+                            else
+                                <repo-version>unknown</repo-version>
+                        }
+                        {
+                            if(string-length($repoXML//repo:license/text()) != 0) then
+                                <repo-license>{$repoXML//repo:license/text()}</repo-license>
+                            else ()
+                        }
+                        <repo-icon>{
+                            if ($icon) then $path || '/modules/get-icon.xql?package=' || $app
+                            else $path || '/resources/images/package.png'}
+                        </repo-icon>
+                        {
+                            if (string-length($app-url) != 0) then
+                            <repo-url>{$app-url}</repo-url>
+                            else ()
+                        }
+
+                        <repo-type>{$repoXML//repo:type/text()}</repo-type>
+                    </repo-app>
             else
                 ()
         }
