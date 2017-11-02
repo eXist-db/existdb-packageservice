@@ -9,4 +9,6 @@ xquery version "3.0";
 
 import module namespace packages="http://exist-db.org/apps/existdb-packages" at "packages.xqm";
 
-packages:get-local-packages()
+<repo-packages class="packages">
+    {packages:get-local-packages()}
+</repo-packages>

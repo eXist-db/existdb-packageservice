@@ -48,7 +48,6 @@ return
             switch ($action)
                 case "remove" return
                     try {
-                        let $type := request:get-parameter("type", ())
                         let $removed := apputil:remove($package-url)
                         return
                             if ($removed) then

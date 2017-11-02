@@ -131,10 +131,10 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
 
                 let $src :=
                   if ($icon) then $path || '/existdb-packageservice/package/icon?package=' || $app
-                  else $path || '/resources/images/package.png'
+                  else $path || '/existdb-packageservice/resources/images/package.png'
 
                 return
-                    <repo-app status="installed" path="{$expathXML//@name}" url="{$app-url}">
+                    <repo-app status="installed" url="{$expathXML//@name}" path="{$app-url}">
                         {
                             if (string-length($expathXML//expath:title/text()) != 0) then
                                 <repo-title>{$expathXML//expath:title/text()}</repo-title>
