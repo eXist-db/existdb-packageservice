@@ -37,6 +37,23 @@ else if(starts-with($exist:path,"/packages/local")) then
             response:set-status-code(403)
         }
 
+else if(starts-with($exist:path,"/packages/apps")) then
+        try {
+            let $loggedIn := $login("org.exist.login",  (), true())
+            let $user := request:get-attribute("org.exist.login.user")
+            return
+                if ($user and sm:is-dba($user)) then (
+                    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                        <forward url="{$exist:controller}/modules/local-apps.xql"></forward>
+                    </dispatch>
+                )
+                else (
+                    response:set-status-code(403)
+                )
+        } catch * {
+            response:set-status-code(403)
+        }
+
 else if(starts-with($exist:path,"/packages/remote")) then
         try {
             let $loggedIn := $login("org.exist.login",  (), true())
