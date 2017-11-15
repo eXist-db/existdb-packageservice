@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 (:~
 : User: joern
@@ -7,26 +7,13 @@ xquery version "3.0";
 : To change this template use File | Settings | File Templates.
 :)
 
-(:
-import module namespace packages="http://exist-db.org/apps/existdb-packages" at "packages.xqm";
-import module namespace ce="http://exist-db.org/apps/custom-elements" at "custom-element.xqm";
-
-<repo-packages>
-    {
-        let $pkgs := packages:get-remote-packages()
-        let $prefix := "repo-"
-        let $ignores := ('ul', 'li')
-        return
-            for $pkg in $pkgs
-            return
-                ce:convert-to-custom-element($pkg, $prefix, $ignores)
-    }
-</repo-packages>
-:)
-
 import module namespace packages="http://exist-db.org/apps/existdb-packages" at "packages.xqm";
 import module namespace ce="http://exist-db.org/apps/custom-elements" at "custom-element.xqm";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
+
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare option output:method "html5";
+declare option output:media-type "text/html";
 
 <repo-packages>
     {
@@ -39,7 +26,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
                                 $config:DEFAULT-REPO || "/public/" || data($pkg/icon)
                             else
                                 $path || "resources/images/package.png"
-            order by data($pkg/repo-title)
+            order by data($pkg/title)
             return
                 <repo-app url="{data($pkg/name)}"
                           abbrev="{data($pkg/abbrev)}"
@@ -70,8 +57,6 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
                     }
 
                     <repo-license>{data($pkg/license)}</repo-license>
-
-                    <repo-version version="{data($pkg/version)}"> </repo-version>
 
                     {
                     if(exists($pkg/requires)) then

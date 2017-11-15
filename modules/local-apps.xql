@@ -8,6 +8,9 @@ xquery version "3.0";
 :)
 
 import module namespace packages="http://exist-db.org/apps/existdb-packages" at "packages.xqm";
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare option output:method "html5";
+declare option output:media-type "text/html";
 
 <repo-packages>
     {packages:get-local-applications()}
