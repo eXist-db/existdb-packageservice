@@ -44,8 +44,22 @@ declare function packages:get-local-libraries(){
     packages:get-local("library")
 };
 
+declare function packages:get-remote(){
+    let $local := packages:get-local-packages()
+    let $repo := packages:public-repo-contents(())
+
+    let $result :=
+        for $app in $repo
+            let $abbrev := data($app/abbrev)
+            let $e := if(exists($local//repo-abbrev[. = $abbrev])) then () else $app
+            return $e
+    return $result
+};
+
+
 declare function packages:get-remote-packages(){
 
+    (: todo: include libs not just apps :)
     let $apps := packages:public-repo-contents(packages:installed-apps("application"))
     let $allowed-apps :=
         for $app in $apps
@@ -100,20 +114,30 @@ declare function packages:get-local($type as xs:string){
         )
 };
 
+(:
+declare function packages:get-icon-src($path as xs:string, $app as xs:string){
+    let $icon :=
+        let $iconRes := repo:get-resource($app, "icon.png")
+        let $hasIcon := exists($iconRes)
+        return
+            $hasIcon
+
+    let $src :=
+      if ($icon) then $path || 'package/icon?package=' || $app
+      else $path || 'resources/images/package.png'
+
+    return $src
+};
+:)
 
 (: should be private but there seems to be a bug :)
-declare function packages:installed-apps($type as xs:string) as element(app)* {
+declare function packages:installed-apps($type as xs:string) as element(repo-app)* {
 
     let $path := functx:substring-before-last(request:get-uri(),'/existdb-packages')
     return
     packages:scan-repo(
         function ($app, $expathXML, $repoXML) {
             if ($repoXML//repo:type = $type) then
-                let $icon :=
-                    let $iconRes := repo:get-resource($app, "icon.png")
-                    let $hasIcon := exists($iconRes)
-                    return
-                        $hasIcon
                 let $app-url :=
                     if ($repoXML//repo:target) then
                         let $target :=
@@ -129,12 +153,21 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                     else
                         ()
 
+
+                let $icon :=
+                    let $iconRes := repo:get-resource($app, "icon.png")
+                    let $hasIcon := exists($iconRes)
+                    return
+                        $hasIcon
+
                 let $src :=
                   if ($icon) then $path || '/existdb-packageservice/package/icon?package=' || $app
                   else $path || '/existdb-packageservice/resources/images/package.png'
 
+
                 return
                     <repo-app status="installed" url="{$expathXML//@name}" path="{$app-url}">
+                        <repo-type>{$repoXML//repo:type/text()}</repo-type>
                         {
                             if (string-length($expathXML//expath:title/text()) != 0) then
                                 <repo-title>{$expathXML//expath:title/text()}</repo-title>
@@ -142,6 +175,7 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                                 <repo-title>unknown title</repo-title>
 
                         }
+
                         {
                             if(string-length($expathXML//@name/string()) != 0) then
                                 <repo-name>{$expathXML//@name/string()}</repo-name>
@@ -172,12 +206,6 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                         else ()
                         }
                         {
-                            if(string-length($expathXML//expath:package/@version/string()) != 0) then
-                                <repo-version>{$expathXML//expath:package/@version/string()}</repo-version>
-                            else
-                                <repo-version>unknown</repo-version>
-                        }
-                        {
                             if(string-length($repoXML//repo:license/text()) != 0) then
                                 <repo-license>{$repoXML//repo:license/text()}</repo-license>
                             else ()
@@ -188,8 +216,12 @@ declare function packages:installed-apps($type as xs:string) as element(app)* {
                             <repo-url>{$app-url}</repo-url>
                             else ()
                         }
-
-                        <repo-type>{$repoXML//repo:type/text()}</repo-type>
+                        {
+                            if(string-length($expathXML//expath:package/@version/string()) != 0) then
+                                <repo-version>{$expathXML//expath:package/@version/string()}</repo-version>
+                            else
+                                <repo-version>unknown</repo-version>
+                        }
                     </repo-app>
             else
                 ()
@@ -228,9 +260,9 @@ declare function packages:get-package-meta($app as xs:string, $name as xs:string
 };
 
 (: should be private but there seems to be a bug :)
-declare function packages:public-repo-contents($installed as element(app)*) {
+declare function packages:public-repo-contents($installed as element(repo-app)*) {
     try {
-        let $url := $config:REPO || "/public/apps.xml?version=" || packages:get-version() ||
+        let $url := $config:DEFAULT-REPO || "/public/apps.xml?version=" || packages:get-version() ||
             "&amp;source=" || util:system-property("product-source")
         (: EXPath client module does not work properly. No idea why. :)
 (:        let $request :=:)
@@ -244,9 +276,9 @@ declare function packages:public-repo-contents($installed as element(app)*) {
             if ($status != 200) then
                 response:set-status-code($status)
             else
-                map(function($app as element(app)) {
+                map(function($app as element(repo-app)) {
                     (: Ignore apps which are already installed :)
-                    if ($app/abbrev = $installed/abbrev) then
+                    if ($app/abbrev = $installed/repo-abbrev) then
                         if (packages:is-newer($app/version/string(), $installed[abbrev = $app/abbrev]/version)) then
                             element { node-name($app) } {
                                 attribute available { $app/version/string() },

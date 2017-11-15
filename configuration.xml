@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
-    <repository>http://demo.exist-db.org/exist/apps/public-repo</repository>
+    <repositories>
+        <repository>http://demo.exist-db.org/exist/apps/public-repo</repository>
+    </repositories>
     <authorization>
         <!--
         # This file allows to configure finegrained access to package service.

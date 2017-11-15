@@ -30,6 +30,7 @@ declare variable $config:app-root :=
 declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.xml"))/repo:meta;
 declare variable $config:expath-descriptor := doc(concat($config:app-root, "/expath-pkg.xml"))/expath:package;
 declare variable $config:SETTINGS := doc($config:app-root || "/configuration.xml")/settings;
+
 (:
 declare variable $config:AUTH := doc($config:app-root || "/configuration.xml")/settings/authorization;
 declare variable $config:VIEW-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "view-packages"]/@required-level);
@@ -38,7 +39,9 @@ declare variable $config:VIEW-DETAILS-PERMISSION := data(doc($config:app-root ||
 declare variable $config:INSTALL-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "install-package"]/@required-level);
 declare variable $config:REMOVE-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "remove-package"]/@required-level);
 :)
-declare variable $config:REPO := xs:anyURI($config:SETTINGS/repository);
+
+(: ### default to first found entry of repository element for now - to be extended for multiple repos ### :)
+declare variable $config:DEFAULT-REPO := xs:anyURI($config:SETTINGS//repository[1]);
 
 (:~
  : Resolve the given path using the current application context.

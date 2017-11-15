@@ -21,7 +21,7 @@ declare %private function install:require-dba($func as function() as item()*) {
 let $action := request:get-parameter("action", "install")
 let $package-url := request:get-parameter("package-url", ())
 let $version := request:get-parameter("version", ())
-let $server-url := $config:REPO
+let $server-url := $config:DEFAULT-REPO
 let $upload := request:get-uploaded-file-name("uploadedfiles[]")
 let $log := console:log("++++++")
 let $log := console:log($upload)
