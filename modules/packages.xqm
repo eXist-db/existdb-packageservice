@@ -99,7 +99,7 @@ declare function packages:get-local($type as xs:string){
              let $log := util:log("info", "app access " || sm:has-access(xs:anyURI($db-path),"r-x"))
              let $groups := sm:get-user-groups(xmldb:get-current-user())
 
-             order by upper-case($app/title/text())
+             order by upper-case($app/repo-title/text())
              return
                  if(sm:has-access(xs:anyURI($db-path),"r-x")) then
                      $app
@@ -166,7 +166,12 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
 
 
                 return
-                    <repo-app status="installed" url="{$expathXML//@name}" path="{$app-url}">
+                    <repo-app url="{$expathXML//@name}"
+                              abbrev="{$expathXML//@abbrev/string()}"
+                              type="{$repoXML//repo:type/text()}"
+                              version="{$expathXML//expath:package/@version/string()}"
+                              status="installed"
+                              path="{$app-url}" >
                         <repo-type>{$repoXML//repo:type/text()}</repo-type>
                         {
                             if (string-length($expathXML//expath:title/text()) != 0) then
@@ -187,6 +192,7 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                                 <repo-description>{$repoXML//repo:description/text()}</repo-description>
                             else ()
                         }
+                        <repo-authors>
                         {
                             for $author in $repoXML//repo:author
                             let $author := if (string-length($author/text()) != 0) then
@@ -195,6 +201,7 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                             return
                                 $author
                         }
+                        </repo-authors>
                         {
                             if(string-length($expathXML//@abbrev/string()) != 0) then
                                 <repo-abbrev>{$expathXML//@abbrev/string()}</repo-abbrev>

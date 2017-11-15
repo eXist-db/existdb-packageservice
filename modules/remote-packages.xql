@@ -39,16 +39,17 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
                                 $config:DEFAULT-REPO || "/public/" || data($pkg/icon)
                             else
                                 $path || "resources/images/package.png"
+            order by data($pkg/repo-title)
             return
-                <repo-app package-url="{data($pkg/name)}"
+                <repo-app url="{data($pkg/name)}"
                           abbrev="{data($pkg/abbrev)}"
                           type="{data($pkg/type)}"
                           version="{data($pkg/version)}"
                           status="available">
                     <repo-icon src="{$icon}">&#160;</repo-icon>
-                    <repo-type>{data($pkg/license)}</repo-type>
-                    <repo-version>{data($pkg/version)}</repo-version>
+                    <repo-type>{data($pkg/type)}</repo-type>
                     <repo-title>{data($pkg/title)}</repo-title>
+                    <repo-version>{data($pkg/version)}</repo-version>
                     <repo-name>{data($pkg/name)}</repo-name>
                     <repo-description>{data($pkg/description)}</repo-description>
 
