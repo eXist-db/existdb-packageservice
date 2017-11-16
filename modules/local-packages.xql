@@ -13,5 +13,10 @@ declare option output:method "html5";
 declare option output:media-type "text/html";
 
 <repo-packages>
-    {packages:get-local-packages()}
+{
+    let $packages := packages:get-local-packages()
+    for $p in $packages
+        order by lower-case(data($p/repo-title))
+        return $p
+}
 </repo-packages>

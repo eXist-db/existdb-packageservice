@@ -26,7 +26,7 @@ declare option output:media-type "text/html";
                                 $config:DEFAULT-REPO || "/public/" || data($pkg/icon)
                             else
                                 $path || "resources/images/package.png"
-            order by data($pkg/title)
+            order by lower-case(data($pkg/title))
             return
                 <repo-app url="{data($pkg/name)}"
                           abbrev="{data($pkg/abbrev)}"
