@@ -26,17 +26,32 @@ declare option output:media-type "text/html";
                                 $config:DEFAULT-REPO || "/public/" || data($pkg/icon)
                             else
                                 $path || "resources/images/package.png"
-            order by lower-case(data($pkg/title))
+            order by $pkg/@available, lower-case($pkg/title)
             return
                 <repo-app url="{data($pkg/name)}"
                           abbrev="{data($pkg/abbrev)}"
                           type="{data($pkg/type)}"
                           version="{data($pkg/version)}"
                           status="available">
+                    {
+                        if(exists($pkg/@installed)) then
+                        attribute{"class"}{"update"}
+                        else()
+                    }
                     <repo-icon src="{$icon}">&#160;</repo-icon>
                     <repo-type>{data($pkg/type)}</repo-type>
                     <repo-title>{data($pkg/title)}</repo-title>
                     <repo-version>{data($pkg/version)}</repo-version>
+                    {
+                        if(exists($pkg/@installed)) then
+                            <repo-installed>{data($pkg/@installed)}</repo-installed>
+                        else ()
+                    }
+                    {
+                        if(exists($pkg/@available)) then
+                            <repo-available>{data($pkg/@available)}</repo-available>
+                        else()
+                    }
                     <repo-name>{data($pkg/name)}</repo-name>
                     <repo-description>{data($pkg/description)}</repo-description>
 

@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace packages="http://exist-db.org/apps/existdb-packages";
 
@@ -44,6 +44,11 @@ declare function packages:get-local-libraries(){
     packages:get-local("library")
 };
 
+(:~
+ : fetches all remote packages from public repo and filters out packages that are already in the list
+ : of local packages. In case there's a version that is newer in the repository list it will be marked with
+ : the attriburtes 'available' and 'installed'.
+ :)
 declare function packages:get-remote(){
     let $local := packages:get-local-packages()
     let $repo := packages:public-repo-contents(())
@@ -51,15 +56,30 @@ declare function packages:get-remote(){
     let $result :=
         for $app in $repo
             let $abbrev := data($app/abbrev)
-            let $e := if(exists($local//repo-abbrev[. = $abbrev])) then () else $app
+            let $e := if(exists($local//repo-abbrev[. = $abbrev])) then
+                            if (packages:is-newer($app/version/string(), $local[repo-abbrev = $app/abbrev]/repo-version)) then
+                                element { node-name($app) } {
+                                    attribute available { $app/version/string() },
+                                    attribute installed { $local[repo-abbrev = $app/abbrev]/repo-version/string() },
+                                    $app/@*,
+                                    $app/*
+                                }
+                            else
+                                ()
+                        else
+                            $app
+            order by lower-case($app/title)
             return $e
     return $result
 };
 
 
+(:
 declare function packages:get-remote-packages(){
 
-    (: todo: include libs not just apps :)
+    :)
+(: todo: include libs not just apps :)(:
+
     let $apps := packages:public-repo-contents(packages:installed-apps("application"))
     let $allowed-apps :=
         for $app in $apps
@@ -79,12 +99,19 @@ declare function packages:get-remote-packages(){
             <no-packages>You do not have sufficient priviledges to view packages</no-packages>
         )
 };
+:)
 
 declare function packages:get-repo-locations(){
     data($packages:configuration//repository)
 };
 
+
+(:~
+ : returns a list of locally installed apps of a given type ('application' or 'library'). It is checked
+ : wether the calling user has to the given package.
+ :)
 (: should be private but there seems to be a bug :)
+
 declare function packages:get-local($type as xs:string){
     let $log := util:log("info", "user: " || xmldb:get-current-user())
 
@@ -94,9 +121,6 @@ declare function packages:get-local($type as xs:string){
          (: todo: this path matching is hardly good enough i guess - how to do better? :)
              let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
 
-             let $log := util:log("info", "app url " || data($app/url))
-             let $log := util:log("info", "db url " || $db-path)
-             let $log := util:log("info", "app access " || sm:has-access(xs:anyURI($db-path),"r-x"))
              let $groups := sm:get-user-groups(xmldb:get-current-user())
 
              order by upper-case($app/repo-title/text())
@@ -114,21 +138,6 @@ declare function packages:get-local($type as xs:string){
         )
 };
 
-(:
-declare function packages:get-icon-src($path as xs:string, $app as xs:string){
-    let $icon :=
-        let $iconRes := repo:get-resource($app, "icon.png")
-        let $hasIcon := exists($iconRes)
-        return
-            $hasIcon
-
-    let $src :=
-      if ($icon) then $path || 'package/icon?package=' || $app
-      else $path || 'resources/images/package.png'
-
-    return $src
-};
-:)
 
 (: should be private but there seems to be a bug :)
 declare function packages:installed-apps($type as xs:string) as element(repo-app)* {
