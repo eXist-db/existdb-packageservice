@@ -24,7 +24,9 @@ It is a headless application to be used by eXistdb-packagemanager and existdb-da
 Outputs a list of locally installed application and libraries.
 
 
-```/packages/local``` - will return a list of HTML elements in the following format:
+URL Path: `/packages/local` 
+
+will return a list of HTML elements in the following format:
 
 ```
 <repo-packages>
@@ -52,9 +54,9 @@ Outputs a list of locally installed application and libraries.
 
 Outputs a list of locally installed applications.
 
-```/packages/apps```
+URL Path: `/packages/apps`
 
-The format is similar to be above. The ```type``` will be "application":
+The format is similar to be above. The `type` will be "application":
 
 ```
 <repo-packages>
@@ -80,9 +82,9 @@ The format is similar to be above. The ```type``` will be "application":
 
 Outputs a lists of package available from the public repository 
 
-```packages/remote```
+`packages/remote`
 
-Remote packages may contain additional elements like ```<repo-other>```
+Remote packages may contain additional elements like `<repo-other>`
 
 ```
 <repo-packages>
@@ -113,13 +115,13 @@ Remote packages may contain additional elements like ```<repo-other>```
 
 ### install or remove a package
 
-```/packages/action```
+`/packages/action`
 
 Will receive a post request with params from the client application.
 
-For installation of a package the ```url```,```abbrev``` and ```version``` must be given.
+For installation of a package the `url`,`abbrev` and `version` must be given.
 
-For removal only the ```url``` must be given.
+For removal only the `url` must be given.
 
 ## Authorization
 
