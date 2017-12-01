@@ -14,6 +14,11 @@
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 
     <changelog>
+        <change version="0.39.1">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>made repo-icon Polymer2 ready. Adding slot attribute</li>
+            </ul>
+        </change>
         <change version="0.39.0">
             <ul xmls="http://www.w3.org/1999/xhtml">
                 <li>added error page when service is directly accessed</li>

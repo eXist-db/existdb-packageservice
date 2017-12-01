@@ -226,7 +226,7 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                                 <repo-license>{$repoXML//repo:license/text()}</repo-license>
                             else ()
                         }
-                        <repo-icon src="{$src}">&#160;</repo-icon>
+                        <repo-icon src="{$src}" slot="icon">&#160;</repo-icon>
                         {
                             if (string-length($app-url) != 0) then
                             <repo-url>{$app-url}</repo-url>

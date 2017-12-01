@@ -38,7 +38,7 @@ declare option output:media-type "text/html";
                         attribute{"class"}{"update"}
                         else()
                     }
-                    <repo-icon src="{$icon}">&#160;</repo-icon>
+                    <repo-icon src="{$icon}" slot="icon">&#160;</repo-icon>
                     <repo-type>{data($pkg/type)}</repo-type>
                     <repo-title>{data($pkg/title)}</repo-title>
                     <repo-version>{data($pkg/version)}</repo-version>
