@@ -96,6 +96,6 @@ else if(starts-with($exist:path, "/resources")) then
         <cache-control cache="yes"/>
     </dispatch>
 else
-    <repo-response>
-        <fail>no service</fail>
-    </repo-response>
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/no-service.html"></forward>
+    </dispatch>

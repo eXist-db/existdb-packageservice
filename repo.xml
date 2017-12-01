@@ -12,4 +12,13 @@
     <finish/>
     <!--todo: what does the password actually mean here? What is it used for? -->
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
+
+    <changelog>
+        <change version="0.39.0">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>added error page when service is directly accessed</li>
+                <li>upgraded to use expath http client</li>
+            </ul>
+        </change>
+    </changelog>
 </meta>
