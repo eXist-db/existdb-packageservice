@@ -125,8 +125,7 @@ declare function packages:get-local($type as xs:string){
 
              order by upper-case($app/repo-title/text())
              return
-                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then
-                     $app
+                 if(sm:has-access(xs:anyURI($db-path),"r-x")) then $app
                  else ()
 
     return
@@ -170,9 +169,14 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                         $hasIcon
 
                 let $src :=
-                  if ($icon) then $path || '/existdb-packageservice/package/icon?package=' || $app
-                  else $path || '/existdb-packageservice/resources/images/package.png'
+                  (:if ($icon) then $path || '/existdb-packageservice/package/icon?package=' || $app:)
+                  (:else $path || '/existdb-packageservice/resources/images/package.png':)
+                  if ($icon) then '../packageservice/package/icon?package=' || $app
+                  else $path || '../packageservice/resources/images/package.png'
 
+
+                (: check if package-url is present in readonly section of configuration.xml :)
+                let $readonly := data($expathXML//@name) = $config:SETTINGS//package
 
                 return
                     <repo-app url="{$expathXML//@name}"
@@ -180,7 +184,8 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                               type="{$repoXML//repo:type/text()}"
                               version="{$expathXML//expath:package/@version/string()}"
                               status="installed"
-                              path="{$app-url}" >
+                              path="{$app-url}"
+                              readonly="{$readonly}">
                         <repo-type>{$repoXML//repo:type/text()}</repo-type>
                         {
                             if (string-length($expathXML//expath:title/text()) != 0) then

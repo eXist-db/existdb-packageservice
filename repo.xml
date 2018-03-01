@@ -7,7 +7,7 @@
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
     <type>application</type>
-    <target>existdb-packageservice</target>
+    <target>packageservice</target>
     <prepare></prepare>
     <finish/>
     <!--todo: what does the password actually mean here? What is it used for? -->

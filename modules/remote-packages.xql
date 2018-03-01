@@ -20,12 +20,12 @@ declare option output:media-type "text/html";
         let $pkgs := packages:get-remote()
         return
             for $pkg in $pkgs
-(:            let $icon := if (exists($pkg/icon)) then data($pkg/icon) else "default.png":)
-            let $path := '/exist/apps/existdb-packageservice/'
+
+            let $path := '/exist/' || substring-after($config:app-root,'/db/')
             let $icon :=    if (exists($pkg/icon)) then
                                 $config:DEFAULT-REPO || "/public/" || data($pkg/icon)
                             else
-                                $path || "resources/images/package.png"
+                                $path || "/resources/images/package.png"
             order by $pkg/@available, lower-case($pkg/title)
             return
                 <repo-app url="{data($pkg/name)}"

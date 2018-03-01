@@ -48,12 +48,16 @@ return
             switch ($action)
                 case "remove" return
                     try {
-                        let $removed := apputil:remove($package-url)
-                        return
-                            if ($removed) then
-                                <status><ok/></status>
-                            else
-                                <status><error>Failed to remove package {$package-url}</error></status>
+                        if($package-url = $config:SETTINGS//package) then
+                            <status><error>{('attempt to remove packageservice denied. If explicit removal is desired please use eXide or Admin Client.', ())}</error></status>
+                        else (
+                            let $removed := apputil:remove($package-url)
+                            return
+                                if ($removed) then
+                                    <status><ok/></status>
+                                else
+                                    <status><error>Failed to remove package {$package-url}</error></status>
+                        )
                     } catch * {
                         <status><error>{($err:description, $err:value)[1]}</error></status>
                     }
