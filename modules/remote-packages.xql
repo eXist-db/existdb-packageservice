@@ -21,7 +21,8 @@ declare option output:media-type "text/html";
         return
             for $pkg in $pkgs
 
-            let $path := '/exist/' || substring-after($config:app-root,'/db/')
+            (:let $path := '/exist/' || substring-after($config:app-root,'/db/'):)
+            let $path := request:get-context-path() || substring-after($config:app-root,'/db')
             let $icon :=    if (exists($pkg/icon)) then
                                 $config:DEFAULT-REPO || "/public/" || data($pkg/icon)
                             else

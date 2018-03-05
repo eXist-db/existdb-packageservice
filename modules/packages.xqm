@@ -141,7 +141,8 @@ declare function packages:get-local($type as xs:string){
 (: should be private but there seems to be a bug :)
 declare function packages:installed-apps($type as xs:string) as element(repo-app)* {
 
-    let $path := functx:substring-before-last(request:get-uri(),'/existdb-packages')
+    (:let $path := functx:substring-before-last(request:get-uri(),'/existdb-packages'):)
+    let $path := request:get-context-path() || substring-after($config:app-root,'/db')
     return
     packages:scan-repo(
         function ($app, $expathXML, $repoXML) {
@@ -169,10 +170,16 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                         $hasIcon
 
                 let $src :=
+
+                  if ($icon) then $path || '/package/icon?package=' || $app
+                  else $path || '/resources/images/package.png'
+
                   (:if ($icon) then $path || '/existdb-packageservice/package/icon?package=' || $app:)
                   (:else $path || '/existdb-packageservice/resources/images/package.png':)
+(:
                   if ($icon) then '../packageservice/package/icon?package=' || $app
                   else $path || '../packageservice/resources/images/package.png'
+:)
 
 
                 (: check if package-url is present in readonly section of configuration.xml :)
