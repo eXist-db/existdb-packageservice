@@ -194,11 +194,6 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                               path="{$app-url}"
                               readonly="{$readonly}">
                         <repo-icon src="{$src}">&#160;</repo-icon>
-                        {
-                            if (string-length($app-url) != 0) then
-                            <repo-url>{$app-url}</repo-url>
-                            else ()
-                        }
                         <repo-type>{$repoXML//repo:type/text()}</repo-type>
                         {
                             if (string-length($expathXML//expath:title/text()) != 0) then
@@ -206,6 +201,17 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                             else
                                 <repo-title>unknown title</repo-title>
 
+                        }
+                        {
+                            if(string-length($expathXML//expath:package/@version/string()) != 0) then
+                                <repo-version>{$expathXML//expath:package/@version/string()}</repo-version>
+                            else
+                                <repo-version>unknown</repo-version>
+                        }
+                        {
+                            if (string-length($app-url) != 0) then
+                            <repo-url>{$app-url}</repo-url>
+                            else ()
                         }
 
                         {
@@ -243,12 +249,6 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                             if(string-length($repoXML//repo:license/text()) != 0) then
                                 <repo-license>{$repoXML//repo:license/text()}</repo-license>
                             else ()
-                        }
-                        {
-                            if(string-length($expathXML//expath:package/@version/string()) != 0) then
-                                <repo-version>{$expathXML//expath:package/@version/string()}</repo-version>
-                            else
-                                <repo-version>unknown</repo-version>
                         }
                     </repo-app>
             else
