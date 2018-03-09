@@ -193,6 +193,12 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                               status="installed"
                               path="{$app-url}"
                               readonly="{$readonly}">
+                        <repo-icon src="{$src}">&#160;</repo-icon>
+                        {
+                            if (string-length($app-url) != 0) then
+                            <repo-url>{$app-url}</repo-url>
+                            else ()
+                        }
                         <repo-type>{$repoXML//repo:type/text()}</repo-type>
                         {
                             if (string-length($expathXML//expath:title/text()) != 0) then
@@ -236,12 +242,6 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
                         {
                             if(string-length($repoXML//repo:license/text()) != 0) then
                                 <repo-license>{$repoXML//repo:license/text()}</repo-license>
-                            else ()
-                        }
-                        <repo-icon src="{$src}" slot="icon">&#160;</repo-icon>
-                        {
-                            if (string-length($app-url) != 0) then
-                            <repo-url>{$app-url}</repo-url>
                             else ()
                         }
                         {

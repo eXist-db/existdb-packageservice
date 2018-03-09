@@ -14,15 +14,24 @@
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 
     <changelog>
-        <change version="0.39.1">
+        <change version="1.2.0">
             <ul xmls="http://www.w3.org/1999/xhtml">
-                <li>made repo-icon Polymer2 ready. Adding slot attribute</li>
+                <li>changed order of subitems in repo-app element (repo-icon always first now for ease of client-side processing)</li>
+                <li>removed slot attributes from repo-icon elements</li>
             </ul>
         </change>
-        <change version="0.39.0">
+        <change version="1.1.2">
             <ul xmls="http://www.w3.org/1999/xhtml">
-                <li>added error page when service is directly accessed</li>
-                <li>upgraded to use expath http client</li>
+                <li>fixed request context pathes</li>
+                <li>block packagemanager and packageservice from being removed</li>
+            </ul>
+        </change>
+        <change version="1.0.0">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>support for svg icons</li>
+                <li>check for newer packages, putting updated packages on top of list</li>
+                <li>fixed html empty elements by using HTML5 serialization</li>
+                <li>showing dummy page in case service is opened directly</li>
             </ul>
         </change>
     </changelog>
