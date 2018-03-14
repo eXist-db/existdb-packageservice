@@ -165,22 +165,14 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
 
                 let $icon :=
                     let $iconRes := repo:get-resource($app, "icon.png")
-                    let $hasIcon := exists($iconRes)
+                    let $iconSvg := repo:get-resource($app, "icon.svg")
+                    let $hasIcon := exists($iconRes) or exists($iconSvg)
                     return
                         $hasIcon
 
                 let $src :=
-
                   if ($icon) then $path || '/package/icon?package=' || $app
                   else $path || '/resources/images/package.png'
-
-                  (:if ($icon) then $path || '/existdb-packageservice/package/icon?package=' || $app:)
-                  (:else $path || '/existdb-packageservice/resources/images/package.png':)
-(:
-                  if ($icon) then '../packageservice/package/icon?package=' || $app
-                  else $path || '../packageservice/resources/images/package.png'
-:)
-
 
                 (: check if package-url is present in readonly section of configuration.xml :)
                 let $readonly := data($expathXML//@name) = $config:SETTINGS//package
