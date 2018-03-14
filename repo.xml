@@ -14,6 +14,16 @@
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 
     <changelog>
+        <change version="1.2.2">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>small fixes to make svg icons work</li>
+            </ul>
+        </change>
+        <change version="1.2.1">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>changed ordering of items inside of repo-app element</li>
+            </ul>
+        </change>
         <change version="1.2.0">
             <ul xmls="http://www.w3.org/1999/xhtml">
                 <li>changed order of subitems in repo-app element (repo-icon always first now for ease of client-side processing)</li>
