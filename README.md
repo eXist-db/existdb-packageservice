@@ -11,6 +11,7 @@ It allows to:
 * install a package
 * remove a package
 * access the package icon
+* read the url of the public eXist-db repository
 
 All available metadata are output as HTML custom elements to provide a 1:1 representation: all 
 elements in the metadata are prefixed with 'repo-' to create a valid HTML5 custom element.
@@ -122,6 +123,13 @@ Will receive a post request with params from the client application.
 For installation of a package the `url`,`abbrev` and `version` must be given.
 
 For removal only the `url` must be given.
+
+### read the url of the public repo
+
+`packages/public-url`
+
+Will return the http Url where the public eXist-db packages are hosted for distribution. This Url
+is used by Packagemanager.
 
 ## Authorization
 

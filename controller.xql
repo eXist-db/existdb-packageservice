@@ -83,6 +83,10 @@ else if(starts-with($exist:path,"/package/icon")) then
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/get-icon.xql"></forward>
         </dispatch>
+else if(starts-with($exist:path,"/packages/public-url")) then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/modules/get-public-url.xql"></forward>
+        </dispatch>
 else if(starts-with($exist:path, "/resources")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>
