@@ -299,7 +299,7 @@ declare function packages:public-repo-contents($installed as element(repo-app)*)
                     (: Ignore apps which are already installed :)
                     if ($app/abbrev = $installed/repo-abbrev) then
                     (: todo: change newer check to use the url instead of abbrev to compare :)
-                        if (packages:is-newer($app/version/string(), $installed[abbrev = $app/abbrev]/version)) then
+                            if (packages:is-newer($app/version/string(), $local[@url = $app/name]/repo-version)) then
                             element { node-name($app) } {
                                 attribute available { $app/version/string() },
                                 attribute installed { $installed[abbrev = $app/abbrev]/version/string() },
