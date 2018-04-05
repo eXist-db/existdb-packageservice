@@ -24,7 +24,7 @@ declare option output:media-type "text/html";
             (:let $path := '/exist/' || substring-after($config:app-root,'/db/'):)
             let $path := request:get-context-path() || substring-after($config:app-root,'/db')
             let $icon :=    if (exists($pkg/icon)) then
-                                $config:DEFAULT-REPO || "/public/" || data($pkg/icon)
+                                $config:DEFAULT-REPO || "/public/" || $pkg/icon[1]
                             else
                                 $path || "/resources/images/package.png"
             order by $pkg/@available, lower-case($pkg/title)

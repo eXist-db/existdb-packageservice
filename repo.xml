@@ -14,6 +14,11 @@
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 
     <changelog>
+        <change version="1.3.1">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>fixed a bug with icon retrieval</li>
+            </ul>
+        </change>
         <change version="1.3.0">
             <ul xmls="http://www.w3.org/1999/xhtml">
                 <li>added endpoint for accessing public url</li>
