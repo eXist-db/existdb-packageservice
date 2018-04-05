@@ -2,7 +2,6 @@ xquery version "3.0";
 
 import module namespace apputil="http://exist-db.org/xquery/apps" at "apputil.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
-import module namespace console="http://exist-db.org/xquery/console";
 
 declare namespace install="http://exist-db.org/apps/dashboard/install";
 declare namespace json="http://www.json.org";
@@ -23,9 +22,6 @@ let $package-url := request:get-parameter("package-url", ())
 let $version := request:get-parameter("version", ())
 let $server-url := $config:DEFAULT-REPO
 let $upload := request:get-uploaded-file-name("uploadedfiles[]")
-let $log := console:log("++++++")
-let $log := console:log($upload)
-let $log := console:log($package-url)
 return
     install:require-dba(function() {
         if (exists($upload)) then
