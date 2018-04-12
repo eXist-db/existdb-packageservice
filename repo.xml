@@ -14,6 +14,11 @@
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 
     <changelog>
+        <change version="1.3.3">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>fixing falsy is-newer check again</li>
+            </ul>
+        </change>
         <change version="1.3.2">
             <ul xmls="http://www.w3.org/1999/xhtml">
                 <li>removed dependency on console module</li>

@@ -55,9 +55,8 @@ declare function packages:get-remote(){
 
     let $result :=
         for $app in $repo
-            let $abbrev := data($app/abbrev)
-            let $e := if(exists($local//repo-abbrev[. = $abbrev])) then
-                            if (packages:is-newer($app/version/string(), $local[repo-abbrev = $app/abbrev]/repo-version)) then
+            let $e := if(exists($local/@url[. = $app/name])) then
+                            if (packages:is-newer($app/version/string(), $local[@url = $app/name]/repo-version)) then
                                 element { node-name($app) } {
                                     attribute available { $app/version/string() },
                                     attribute installed { $local[repo-abbrev = $app/abbrev]/repo-version/string() },
@@ -297,9 +296,9 @@ declare function packages:public-repo-contents($installed as element(repo-app)*)
             else
                 map(function($app as element(repo-app)) {
                     (: Ignore apps which are already installed :)
-                    if ($app/abbrev = $installed/repo-abbrev) then
-                    (: todo: change newer check to use the url instead of abbrev to compare :)
-                            if (packages:is-newer($app/version/string(), $local[@url = $app/name]/repo-version)) then
+                    if ($app/name = $installed/@url) then
+                        (: todo: change newer check to use the url instead of abbrev to compare :)
+                        if (packages:is-newer($app/version/string(), $installed[@url = $app/name]/version)) then
                             element { node-name($app) } {
                                 attribute available { $app/version/string() },
                                 attribute installed { $installed[abbrev = $app/abbrev]/version/string() },
