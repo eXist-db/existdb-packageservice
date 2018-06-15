@@ -357,3 +357,40 @@ declare function packages:compare-versions($installed as xs:string*, $available 
     else
         number(head($available)) > number(head($installed))
 };
+
+declare function packages:packages-as-json($packages as element()*){
+    for $p in $packages
+        let $abbrev := data($p/@abbrev)
+        let $authors := $p/repo-authors
+        let $description := data($p/repo-description)
+        let $icon := data($p/repo-icon/@src)
+        let $name := data($p/repo-name)
+        let $path := data($p/@path)
+        let $readonly := data($p/@readonly)
+        let $status := data($p/@status)
+        let $title := data($p/repo-title)
+        let $type := data($p/@type)
+        let $url := data($p/@url)
+        let $version := data($p/@version)
+        let $website := data($p/repo-website)
+        order by lower-case(data($p/repo-title))
+        return map {
+            "abbrev": $abbrev,
+            "authors": array {
+                for $a in $authors
+                let $author := data($a/repo-author)
+                return $author
+            },
+            "description": $description,
+            "icon": $icon,
+            "name": $name,
+            "path": $path,
+            "readonly": $readonly,
+            "status": $status,
+            "title": $title,
+            "type": $type,
+            "url": $url,
+            "version": $version,
+            "website": $website
+        }
+};

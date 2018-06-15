@@ -8,7 +8,7 @@ xquery version "3.1";
 :)
 
 import module namespace packages="http://exist-db.org/apps/existdb-packages" at "packages.xqm";
-import module namespace ce="http://exist-db.org/apps/custom-elements" at "custom-element.xqm";
+import module namespace ce="http://exist-db.org/apps/custom-ements" at "custom-element.xqm";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
