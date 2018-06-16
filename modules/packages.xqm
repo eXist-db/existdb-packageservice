@@ -268,7 +268,7 @@ declare function packages:get-package-meta($app as xs:string, $name as xs:string
     return
         if (exists($data)) then
             try {
-                util:parse($data)
+                parse-xml($data)
             } catch * {
                 <meta xmlns="http://exist-db.org/xquery/repo">
                     <description>Invalid repo descriptor for app {$app}</description>
