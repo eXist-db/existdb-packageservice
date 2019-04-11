@@ -1,5 +1,6 @@
 xquery version "3.0";
 
+import module namespace sm="http://exist-db.org/xquery/securitymanager:";
 import module namespace apputil="http://exist-db.org/xquery/apps" at "apputil.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
@@ -9,7 +10,7 @@ declare namespace json="http://www.json.org";
 declare option exist:serialize "method=json media-type=application/json";
 
 declare %private function install:require-dba($func as function() as item()*) {
-    if (xmldb:is-admin-user(xmldb:get-current-user())) then
+    if (sm:is-dba(xmldb:get-current-user())) then
         $func()
     else (
         response:set-status-code(403),
