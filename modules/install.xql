@@ -1,6 +1,5 @@
 xquery version "3.0";
 
-import module namespace sm="http://exist-db.org/xquery/securitymanager:";
 import module namespace apputil="http://exist-db.org/xquery/apps" at "apputil.xql";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 

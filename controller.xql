@@ -24,7 +24,7 @@ if(starts-with($exist:path,"/packages/local")) then
                 if ($user and sm:is-dba($user)) then (
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         (:<forward url="{$exist:controller}/modules/local-packages.xql"></forward>:)
-                        <forward url="{$exist:controller}/modules/local-packages-json.xql"></forward>
+                        <forward url="{$exist:controller}/modules/local-packages.xql"></forward>
                     </dispatch>
                 )
                 else (
@@ -38,7 +38,7 @@ else if(starts-with($exist:path,"/packages/apps")) then
         try {
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 (:<forward url="{$exist:controller}/modules/local-apps.xql"></forward>:)
-                <forward url="{$exist:controller}/modules/local-apps-json.xql"></forward>
+                <forward url="{$exist:controller}/modules/local-apps.xql"></forward>
             </dispatch>
         } catch * {
             response:set-status-code(500)
@@ -52,7 +52,7 @@ else if(starts-with($exist:path,"/packages/remote")) then
                 if ($user and sm:is-dba($user)) then (
                     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                         (:<forward url="{$exist:controller}/modules/remote-packages.xql"></forward>:)
-                        <forward url="{$exist:controller}/modules/remote-packages-json.xql"></forward>
+                        <forward url="{$exist:controller}/modules/remote-packages.xql"></forward>
                     </dispatch>
                 )
                 else (
