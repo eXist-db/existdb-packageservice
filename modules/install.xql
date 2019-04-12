@@ -10,11 +10,11 @@ declare namespace json="http://www.json.org";
 declare option exist:serialize "method=json media-type=application/json";
 
 declare %private function install:require-dba($func as function() as item()*) {
-    if (sm:is-dba(xmldb:get-current-user())) then
+    if (sm:is-dba(sm:id()//sm:real/sm:username/string())) then
         $func()
     else (
         response:set-status-code(403),
-        <status><error>{"user: '" || xmldb:get-current-user() || "' is not authorized"}</error></status>
+        <status><error>{"user: '" || sm:id()//sm:real/sm:username/string() || "' is not authorized"}</error></status>
     )
 };
 

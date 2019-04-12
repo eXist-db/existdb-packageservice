@@ -112,7 +112,7 @@ declare function packages:get-repo-locations(){
 (: should be private but there seems to be a bug :)
 
 declare function packages:get-local($type as xs:string){
-    let $log := util:log("info", "user: " || xmldb:get-current-user())
+    let $log := util:log("info", "user: " || sm:id()//sm:real/sm:username/string())
 
     let $apps :=  packages:installed-apps($type)
     let $allowed-apps :=
@@ -120,7 +120,7 @@ declare function packages:get-local($type as xs:string){
          (: todo: this path matching is hardly good enough i guess - how to do better? :)
              let $db-path := "/db/" || substring-after(data($app/url),"/exist/")
 
-             let $groups := sm:get-user-groups(xmldb:get-current-user())
+             let $groups := sm:get-user-groups(sm:id()//sm:real/sm:username/string())
 
              order by upper-case($app/repo-title/text())
              return
@@ -294,7 +294,7 @@ declare function packages:public-repo-contents($installed as element(repo-app)*)
             if ($status != 200) then
                 response:set-status-code($status)
             else
-                map(function($app as element(repo-app)) {
+                for-each($data[2]//app, function($app as element(repo-app)) {
                     (: Ignore apps which are already installed :)
                     if ($app/name = $installed/@url) then
                         (: todo: change newer check to use the url instead of abbrev to compare :)
@@ -309,7 +309,7 @@ declare function packages:public-repo-contents($installed as element(repo-app)*)
                             ()
                     else
                         $app
-                }, $data[2]//app)
+                })
     } catch * {
         util:log("ERROR", "Error while retrieving app packages: " || $err:description)
     }
