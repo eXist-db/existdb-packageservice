@@ -112,7 +112,7 @@ declare function packages:get-repo-locations(){
 (: should be private but there seems to be a bug :)
 
 declare function packages:get-local($type as xs:string){
-    let $log := util:log("info", "user: " || sm:id()//sm:real/sm:username/string())
+(:    let $log := util:log("info", "user: " || sm:id()//sm:real/sm:username/string()):)
 
     let $apps :=  packages:installed-apps($type)
     let $allowed-apps :=
