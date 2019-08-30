@@ -14,6 +14,21 @@
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 
     <changelog>
+        <change version="1.3.8">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>Increment version for eXist 5.0.0 final</li>
+            </ul>
+        </change>
+        <change version="1.3.7">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>Updated the URL of the public repo</li>
+            </ul>
+        </change>
+        <change version="1.3.6">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>Fixed Semver comparisons</li>
+            </ul>
+        </change>
         <change version="1.3.3">
             <ul xmls="http://www.w3.org/1999/xhtml">
                 <li>fixing falsy is-newer check again</li>
