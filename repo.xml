@@ -14,6 +14,11 @@
     <permissions user="packageservice" password="packageservice" group="packageservice" mode="rwxrwxr-x"/>
 
     <changelog>
+        <change version="1.3.9">
+            <ul xmls="http://www.w3.org/1999/xhtml">
+                <li>Fixed: Prevent users from triggering packageservice upgrades, which could crash the database; updates to this package must be sideloaded - <a href="https://github.com/eXist-db/existdb-packageservice/pull/10">#10</a></li>
+            </ul>
+        </change>
         <change version="1.3.8">
             <ul xmls="http://www.w3.org/1999/xhtml">
                 <li>Increment version for eXist 5.0.0 final</li>
