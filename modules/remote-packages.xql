@@ -18,7 +18,9 @@ declare option output:media-type "text/html";
     {
         let $pkgs := packages:get-remote()
         return
-            for $pkg in $pkgs
+            (: display all available updates EXCEPT for packageservice, 
+             : since installing this over a live instance will crash the database! :)
+            for $pkg in $pkgs[name ne "http://exist-db.org/apps/existdb-packageservice"]
 
             (:let $path := '/exist/' || substring-after($config:app-root,'/db/'):)
             let $path := request:get-context-path() || substring-after($config:app-root,'/db')
