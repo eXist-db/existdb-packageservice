@@ -123,10 +123,10 @@ declare function apputil:is-installed($pkgURI as xs:anyURI, $version as xs:strin
  :)
 declare function apputil:install-from-repo($name as xs:string?, $package-path as xs:anyURI?, $serverUri as xs:anyURI, $version as xs:string?) {
     let $serverUri :=
-        if (ends-with($serverUri, "/modules/find.xql")) then
+        if (ends-with($serverUri, "/find")) then
             $serverUri
         else
-            xs:anyURI($serverUri || "/modules/find.xql")
+            xs:anyURI($serverUri || "/find")
     let $remove := apputil:remove($name)
     return
         repo:install-and-deploy($name, $version, $serverUri)
@@ -141,10 +141,10 @@ declare function apputil:upload($serverUri as xs:anyURI) as xs:string {
     let $docName := request:get-uploaded-file-name("uploadedfiles[]")
     let $file := request:get-uploaded-file-data("uploadedfiles[]")
     let $serverUri :=
-        if (ends-with($serverUri, "/modules/find.xql")) then
+        if (ends-with($serverUri, "/find")) then
             $serverUri
         else
-            xs:anyURI($serverUri || "/modules/find.xql")
+            xs:anyURI($serverUri || "/find")
     return
         if ($docName) then
             let $stored := xmldb:store($apputil:collection, xmldb:encode-uri($docName), $file)
