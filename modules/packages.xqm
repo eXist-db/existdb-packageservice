@@ -362,7 +362,7 @@ declare function packages:packages-as-json($packages as element()*){
     for $p in $packages
         let $abbrev := data($p/@abbrev)
         let $authors := $p/repo-authors
-        let $description := data($p/repo-description)
+        let $description := (data($p/repo-description),'')
         let $icon := data($p/repo-icon/@src)
         let $name := data($p/repo-name)
         let $path := data($p/@path)
@@ -372,7 +372,7 @@ declare function packages:packages-as-json($packages as element()*){
         let $type := data($p/@type)
         let $url := data($p/@url)
         let $version := data($p/@version)
-        let $website := data($p/repo-website)
+        let $website := (data($p/repo-website),'')
         order by lower-case(data($p/repo-title))
         return map {
             "abbrev": $abbrev,

@@ -16,7 +16,16 @@ declare variable $exist:root external;
 declare variable $login := login-helper:get-login-method();
 
 request:set-attribute("betterform.filter.ignoreResponseBody", "true"),
-if(starts-with($exist:path,"/packages/local")) then
+if(starts-with($exist:path,"/packages/local/json")) then
+        try {
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$exist:controller}/modules/local-packages-json.xql"></forward>
+            </dispatch>
+        } catch * {
+            response:set-status-code(500)
+        }
+
+else if(starts-with($exist:path,"/packages/local")) then
         try {
             let $loggedIn := $login("org.exist.login",  (), true())
             let $user := request:get-attribute("org.exist.login.user")
@@ -34,6 +43,14 @@ if(starts-with($exist:path,"/packages/local")) then
             response:set-status-code(403)
         }
 
+else if(starts-with($exist:path,"/packages/apps/json")) then
+        try {
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$exist:controller}/modules/local-apps-json.xql"></forward>
+            </dispatch>
+        } catch * {
+            response:set-status-code(500)
+        }
 else if(starts-with($exist:path,"/packages/apps")) then
         try {
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -44,6 +61,14 @@ else if(starts-with($exist:path,"/packages/apps")) then
             response:set-status-code(500)
         }
 
+else if(starts-with($exist:path,"/packages/remote/json")) then
+        try {
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="{$exist:controller}/modules/remote-packages-json.xql"></forward>
+            </dispatch>
+        } catch * {
+            response:set-status-code(500)
+        }
 else if(starts-with($exist:path,"/packages/remote")) then
         try {
             let $loggedIn := $login("org.exist.login",  (), true())
