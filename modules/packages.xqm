@@ -4,6 +4,7 @@ module namespace packages="http://exist-db.org/apps/existdb-packages";
 
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace functx = "http://www.functx.com";
+import module namespace semver = "http://exist-db.org/xquery/semver";
 
 declare namespace json="http://www.json.org";
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
@@ -340,22 +341,7 @@ declare function packages:required-version($required as element(requires)) {
 
 (: should be private but there seems to be a bug :)
 declare function packages:is-newer($available as xs:string, $installed as xs:string) as xs:boolean {
-    let $verInstalled := tokenize($installed, "\.")
-    let $verAvailable := tokenize($available, "\.")
-    return
-        packages:compare-versions($verInstalled, $verAvailable)
-};
-
-(: should be private but there seems to be a bug :)
-declare function packages:compare-versions($installed as xs:string*, $available as xs:string*) as xs:boolean {
-    if (empty($installed)) then
-        exists($available)
-    else if (empty($available)) then
-        false()
-    else if (head($available) = head($installed)) then
-        packages:compare-versions(tail($installed), tail($available))
-    else
-        number(head($available)) > number(head($installed))
+    semver:gt($available, $installed, true())
 };
 
 declare function packages:packages-as-json($packages as element()*){
