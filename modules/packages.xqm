@@ -18,7 +18,7 @@ declare option output:method "html5";
 declare option output:media-type "text/html";
 
 declare variable $packages:configuration := doc($config:app-root || "/configuration.xml");
-
+declare variable $packages:repos := $packages:configuration//repository[@active='true'];
 declare variable $packages:DEFAULTS := doc($config:app-root || "/defaults.xml")/apps;
 declare variable $packages:ADMINAPPS := ["dashboard","backup"];
 declare variable $packages:HIDE := ("dashboard");
@@ -282,11 +282,13 @@ declare function packages:get-package-meta($app as xs:string, $name as xs:string
 (: should be private but there seems to be a bug :)
 declare function packages:public-repo-contents($installed as element(repo-app)*) {
     try {
-        let $url := $config:DEFAULT-REPO || "/public/apps.xml?version=" || packages:get-version() ||
+        for $pkgs in $packages:repos
+        let $url := $pkgs || "/public/apps.xml?version=" || packages:get-version() ||
             "&amp;source=" || util:system-property("product-source")
         (: EXPath client module does not work properly. No idea why. :)
-        let $request :=
-            <http:request method="get" href="{$url}" timeout="10">
+        let $request := for $r in $url
+            return
+            <http:request method="get" href="{$r}" timeout="10">
                 <http:header name="Cache-Control" value="no-cache"/>
             </http:request>
         let $data := http:send-request($request)
