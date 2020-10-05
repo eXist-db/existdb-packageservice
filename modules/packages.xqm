@@ -283,12 +283,12 @@ declare function packages:get-package-meta($app as xs:string, $name as xs:string
 declare function packages:public-repo-contents($installed as element(repo-app)*) {
     try {
         for $pkgs in $packages:repos
-        let $url := $pkgs || "/public/apps.xml?version=" || packages:get-version() ||
+        let $urls := $pkgs || "/public/apps.xml?version=" || packages:get-version() ||
             "&amp;source=" || util:system-property("product-source")
         (: EXPath client module does not work properly. No idea why. :)
-        let $request := for $r in $url
+        let $request := for $url in $urls
             return
-            <http:request method="get" href="{$r}" timeout="10">
+            <http:request method="get" href="{$url}" timeout="10">
                 <http:header name="Cache-Control" value="no-cache"/>
             </http:request>
         let $data := http:send-request($request)
