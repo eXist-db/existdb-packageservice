@@ -101,8 +101,9 @@ declare function packages:get-remote-packages(){
 };
 :)
 
+(:~ only return repos that are set to active :)
 declare function packages:get-repo-locations(){
-    data($packages:configuration//repository)
+    data($packages:configuration//repository[@active = 'true'])
 };
 
 
