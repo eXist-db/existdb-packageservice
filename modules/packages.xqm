@@ -164,8 +164,11 @@ declare function packages:installed-apps($type as xs:string) as element(repo-app
 
 
                 let $icon :=
-                    let $iconRes := repo:get-resource($app, "icon.png")
-                    let $iconSvg := repo:get-resource($app, "icon.svg")
+                    (: TODO: Replace try-catch expressions below with repo:resource-available 
+                     : when https://github.com/eXist-db/exist/issues/3904 is resolved 
+                     :)
+                    let $iconRes := try { repo:get-resource($app, "icon.png") } catch * { () }
+                    let $iconSvg := try { repo:get-resource($app, "icon.svg") } catch * { () }
                     let $hasIcon := exists($iconRes) or exists($iconSvg)
                     return
                         $hasIcon
