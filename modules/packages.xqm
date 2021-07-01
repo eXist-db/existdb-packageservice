@@ -264,15 +264,19 @@ declare function packages:scan-repo($callback as function(xs:string, element(), 
 };
 
 (: should be private but there seems to be a bug :)
-declare function packages:get-package-meta($app as xs:string, $name as xs:string) as element(repo:meta) {
+(: NOTE: The present try-catch fallback assumes this function returns repo.xml files, but it
+ : also returns expath-pkg.xml files; see packages:scan-repo() above. :)
+declare function packages:get-package-meta($app as xs:string, $name as xs:string) as document-node() {
     try {
         repo:get-resource($app, $name)
         => util:binary-to-string() 
         => parse-xml()
     } catch * {
-        <meta xmlns="http://exist-db.org/xquery/repo">
-            <description>Invalid repo descriptor for app {$app}</description>
-        </meta>
+        document {
+            <meta xmlns="http://exist-db.org/xquery/repo">
+                <description>Invalid repo descriptor for app {$app}</description>
+            </meta>
+        }
     }
 };
 
