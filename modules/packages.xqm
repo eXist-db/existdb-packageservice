@@ -264,22 +264,16 @@ declare function packages:scan-repo($callback as function(xs:string, element(), 
 };
 
 (: should be private but there seems to be a bug :)
-declare function packages:get-package-meta($app as xs:string, $name as xs:string) {
-    let $data :=
-        let $meta := repo:get-resource($app, $name)
-        return
-            if (exists($meta)) then util:binary-to-string($meta) else ()
-    return
-        if (exists($data)) then
-            try {
-                parse-xml($data)
-            } catch * {
-                <meta xmlns="http://exist-db.org/xquery/repo">
-                    <description>Invalid repo descriptor for app {$app}</description>
-                </meta>
-            }
-        else
-            ()
+declare function packages:get-package-meta($app as xs:string, $name as xs:string) as element(repo:meta) {
+    try {
+        repo:get-resource($app, $name)
+        => util:binary-to-string() 
+        => parse-xml()
+    } catch * {
+        <meta xmlns="http://exist-db.org/xquery/repo">
+            <description>Invalid repo descriptor for app {$app}</description>
+        </meta>
+    }
 };
 
 (: should be private but there seems to be a bug :)
