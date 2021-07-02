@@ -272,11 +272,16 @@ declare function packages:get-package-meta($app as xs:string, $name as xs:string
         => util:binary-to-string() 
         => parse-xml()
     } catch * {
-        document {
-            <meta xmlns="http://exist-db.org/xquery/repo">
-                <description>Invalid repo descriptor for app {$app}</description>
-            </meta>
-        }
+        let $message := "The " || $name || " package metadata document could not be found for the package " || $app
+        return
+            (
+                util:log("WARN", $message),
+                document {
+                    <meta xmlns="http://exist-db.org/xquery/repo">
+                        <description>{$message}</description>
+                    </meta>
+                }
+            )
     }
 };
 
