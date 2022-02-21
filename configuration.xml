@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
     <repositories>
-        <repository active="true" default="true">http://exist-db.org/exist/apps/public-repo</repository>
+        <repository active="true" default="true">https://exist-db.org/exist/apps/public-repo</repository>
     </repositories>
     <readonly>
         <package>http://exist-db.org/apps/existdb-packageservice</package>
