@@ -40,8 +40,8 @@ declare variable $config:INSTALL-PACKAGE-PERMISSION := data(doc($config:app-root
 declare variable $config:REMOVE-PACKAGE-PERMISSION := data(doc($config:app-root || "/configuration.xml")/settings/authorization/action[@name eq "remove-package"]/@required-level);
 :)
 
-(: ### default to first found entry of repository element for now - to be extended for multiple repos ### :)
-declare variable $config:DEFAULT-REPO := xs:anyURI($config:SETTINGS//repository[1]);
+(: the highlander says: there can only be one default repo :)
+declare variable $config:DEFAULT-REPO := xs:anyURI($config:SETTINGS//repository[@default = "true"][1]);
 
 (:~
  : Resolve the given path using the current application context.
