@@ -18,7 +18,7 @@ declare option output:method "html5";
 declare option output:media-type "text/html";
 
 declare variable $packages:configuration := doc($config:app-root || "/configuration.xml");
-
+declare variable $packages:repos := $packages:configuration//repository[@active='true'];
 declare variable $packages:DEFAULTS := doc($config:app-root || "/defaults.xml")/apps;
 declare variable $packages:ADMINAPPS := ["dashboard","backup"];
 declare variable $packages:HIDE := ("dashboard");
@@ -101,8 +101,9 @@ declare function packages:get-remote-packages(){
 };
 :)
 
+(:~ only return repos that are set to active :)
 declare function packages:get-repo-locations(){
-    data($packages:configuration//repository)
+    data($packages:configuration//repository[@active = 'true'])
 };
 
 
@@ -288,10 +289,12 @@ declare function packages:get-package-meta($app as xs:string, $name as xs:string
 (: should be private but there seems to be a bug :)
 declare function packages:public-repo-contents($installed as element(repo-app)*) {
     try {
-        let $url := $config:DEFAULT-REPO || "/public/apps.xml?version=" || packages:get-version() ||
+        for $pkgs in $packages:repos
+        let $urls := $pkgs || "/public/apps.xml?version=" || packages:get-version() ||
             "&amp;source=" || util:system-property("product-source")
         (: EXPath client module does not work properly. No idea why. :)
-        let $request :=
+        let $request := for $url in $urls
+            return
             <http:request method="get" href="{$url}" timeout="10">
                 <http:header name="Cache-Control" value="no-cache"/>
             </http:request>
