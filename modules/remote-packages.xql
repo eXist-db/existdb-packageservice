@@ -28,10 +28,8 @@ declare option output:media-type "text/html";
                                 $config:DEFAULT-REPO || "/public/" || $pkg/icon[1]
                             else
                                 $path || "/resources/images/package.png"
-            let $update-available := exists($pkg/@installed)
             (: Ensure updates to installed packages appear at the top of the list, before other packages :)
-            let $update-available-sort := if ($update-available) then "A" else "B"
-            order by $update-available-sort, $pkg/@available, lower-case($pkg/title)
+            order by $pkg/@available empty greatest, lower-case($pkg/title)
             return
                 <repo-app url="{data($pkg/name)}"
                           abbrev="{data($pkg/abbrev)}"
@@ -39,7 +37,7 @@ declare option output:media-type "text/html";
                           version="{data($pkg/version)}"
                           status="available">
                     {
-                        if ($update-available) then
+                        if (exists($pkg/@installed)) then
                             (
                                 attribute class { "update" },
                                 <repo-installed>{data($pkg/@installed)}</repo-installed>,
